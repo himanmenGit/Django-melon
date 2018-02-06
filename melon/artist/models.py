@@ -14,7 +14,7 @@ class Artist(models.Model):
         (BLOOD_TYPE_AB, 'AB형'),
         (BLOOD_TYPE_OTHER, '기타'),
     )
-    img_profile = models.ImageField('프로필 이미지', upload_to='artist')
+    img_profile = models.ImageField('프로필 이미지', upload_to='artist', blank=True)
     name = models.CharField('이름', max_length=50)
     real_name = models.CharField('본명', max_length=50, blank=True)
     nationality = models.CharField('국적', max_length=50, blank=True)
