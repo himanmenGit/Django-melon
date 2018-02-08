@@ -8,16 +8,14 @@
     <title>Document</title>
 </head>
 <body>
-<div>
-    <a href="{% url 'songs:song-list' %}">노래리스트</a>
     <a href="{% url 'albums:album-list' %}">앨범리스트</a>
+    <a href="{% url 'artists:artist-list' %}">가수리스트</a>
     <ul>
-    {% for artist in artists %}
-        <li>
-            {{ artist.name }}
-        </li>
-    {% endfor %}
-    </ul>
-</div>
+        {% for song in songs %}
+            <li>
+                {{ song.title }}
+            </li>
+        {% endfor %}
+        </ul>
 </body>
 </html>
