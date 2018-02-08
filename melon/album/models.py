@@ -36,7 +36,7 @@ class Album(models.Model):
     @property
     def genre(self):
         # 장르는 가지고 있는 노래들에서 가져오기
-        pass
+        return ''
 
     def __str__(self):
         # 호호호빵 [휘성, 김태우]
@@ -46,5 +46,5 @@ class Album(models.Model):
         #       valeus_list
         return '{title} [{artists}]'.format(
             title=self.title,
-            artists=', '.join(self.artists.all().values_list('name', flat=True))
+            artists=', '.join(self.artists.values_list('name', flat=True))
         )
