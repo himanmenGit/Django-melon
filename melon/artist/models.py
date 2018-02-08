@@ -19,7 +19,7 @@ class Artist(models.Model):
     real_name = models.CharField('본명', max_length=50, blank=True)
     nationality = models.CharField('국적', max_length=50, blank=True)
     birth_date = models.DateField('생년월일', blank=True, null=True)
-    constellation = models.CharField('별자리', max_length=30)
+    constellation = models.CharField('별자리', max_length=30, blank=True, null=True)
     blood_type = models.CharField('혈액형', max_length=30, choices=CHOICES_BLOOD_TYPE, blank=True)
     intro = models.TextField('소개', blank=True)
 
