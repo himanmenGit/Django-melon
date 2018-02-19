@@ -2,12 +2,22 @@
 
 {% block content %}
 
+{% if songs %}
+<ul>
+    {% for song in songs %}
+    <li>
+        {{ song.title }}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
 <form action="" method="POST">
     {% csrf_token %}
     <div class="form-group">
-        <input id="" type="text" name="" class="" placeholder="" value="">
+        <input id="" type="text" name="keyword" class="" placeholder="" value="">
         <button type="submit" class="btn">검색</button>
     </div>
 </form>
+{% endif %}
 
 {% endblock %}
