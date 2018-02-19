@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if form_error %}
+<div>
+    <p>
+    <h2>ERROR: [{{ form_error }}]</h2></p>
+</div>
+{% endif %}
+<form action="" method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="artist_name">이름</label>
+        <input id="artist_name" type="text" name="artist_name" class="form-control" placeholder="이름"
+               value="{{ artist.artist_name }}">
+    </div>
+
+    <div class="form-group">
+        <label for="realname">별명</label>
+        <input id="realname" type="text" name="realname" class="form-control" placeholder="별명"
+               value="{{ artist.realname }}">
+    </div>
+
+    <div class="form-group">
+        <label for="nationality">국적</label>
+        <input id="nationality" type="text" name="nationality" class="form-control" placeholder="국적"
+               value="{{ artist.nationality }}">
+    </div>
+
+    <div class="form-group">
+        <label for="birth_date">생일</label>
+        <input id="birth_date" required type="date" name="birth_date" class="form-control" placeholder="생일"
+               value="{{ artist.birth_date }}">
+    </div>
+
+    <div class="form-group">
+        <label for="constellation">별자리</label>
+        <input id="constellation" type="text" name="constellation" class="form-control" placeholder="별자리"
+               value="{{ artist.constellation }}">
+    </div>
+
+    <div class="form-group">
+        <label for="blood_type">혈액형</label>
+        <select id="blood_type" name="blood_type" value="{{ artist.value }}">
+            <option value="a">A형</option>
+            <option value="b">B형</option>
+            <option value="o">O형</option>
+            <option value="c">AB형</option>
+            <option value="x">기타</option>
+        </select>
+        <!--<label for="blood_type">혈액형</label>-->
+        <!--<input id="blood_type" type="text" name="blood_type" class="form-control" placeholder="a,b,o,c,x" value="{{ post.blood_type }}">-->
+    </div>
+
+    <div class="form-group">
+        <label for="intro">소개</label>
+        <textarea name="intro" id="intro" cols="30" rows="10" placeholder="소개"
+                  class="form-control">{{ artist.intro }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">
+        등록
+    </button>
+</form>
+{% endblock %}

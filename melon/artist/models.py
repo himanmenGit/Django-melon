@@ -3,8 +3,8 @@ from django.db import models
 
 class Artist(models.Model):
     BLOOD_TYPE_A = 'a'
-    BLOOD_TYPE_B = 'a'
-    BLOOD_TYPE_O = 'a'
+    BLOOD_TYPE_B = 'b'
+    BLOOD_TYPE_O = 'o'
     BLOOD_TYPE_AB = 'c'
     BLOOD_TYPE_OTHER = 'x'
     CHOICES_BLOOD_TYPE = (
