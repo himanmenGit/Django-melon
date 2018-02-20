@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render
 
 from .models import Song
@@ -49,7 +50,9 @@ def song_search(request):
     :param request:
     :return:
     """
-    context = dict()
+    context = {
+        'song_infos': [],
+    }
     try:
         keyword = request.GET['keyword'].strip()
     except KeyError as e:
@@ -57,10 +60,14 @@ def song_search(request):
         keyword = None;
 
     if keyword:
-        songs_from_artists = Song.objects.filter(album__artists__name__contains=keyword)
-        songs_from_albums = Song.objects.filter(album__title__contains=keyword)
-        songs_from_title = Song.objects.filter(title__contains=keyword)
-        context['songs_from_artists'] = songs_from_artists
-        context['songs_from_albums'] = songs_from_albums
-        context['songs_from_title'] = songs_from_title
+        song_infos = list()
+        song_infos.append(('아티스트명', Q(album__artists__name__contains=keyword)))
+        song_infos.append(('앨범명', Q(album__title__contains=keyword)))
+        song_infos.append(('노래제목', Q(title__contains=keyword)))
+
+        for song_type, song_Q in song_infos:
+            context['song_infos'].append({
+                'type': song_type,
+                'songs': Song.objects.filter(song_Q),
+            })
     return render(request, 'song/song_search.html', context)
