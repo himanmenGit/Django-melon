@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -40,6 +41,13 @@ def song_search(request):
     4. render의 3번쨰 인수로 context를 전달
     5. template에 전달된 'songs'를 출력
 
+
+    # songs_from_artists
+    # songs_from_albums
+    # song_from_title
+    # 위 세 변수에 더 위의 조건 3개에 부합하는 쿼리셋을 각각 전달
+    #  세 변수를 이용해 검색 결과를 3단으로 분리해서 출력
+
     :param request:
     :return:
     """
@@ -47,6 +55,13 @@ def song_search(request):
     if request.method == 'POST':
         keyword = request.POST['keyword'].strip()
         if keyword:
-            songs = Song.objects.filter(title__contains=keyword)
-            context['songs'] = songs
+            # songs = Song.objects.filter(Q(title__contains=keyword) |
+            #                             Q(album__title__contains=keyword) |
+            #                             Q(album__artists__name__contains=keyword)).distinct()
+            songs_from_artists = Song.objects.filter(album__artists__name__contains=keyword)
+            songs_from_albums = Song.objects.filter(album__title__contains=keyword)
+            songs_from_title = Song.objects.filter(title__contains=keyword)
+            context['songs_from_artists'] = songs_from_artists
+            context['songs_from_albums'] = songs_from_albums
+            context['songs_from_title'] = songs_from_title
     return render(request, 'song/song_search.html', context)

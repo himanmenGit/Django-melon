@@ -2,15 +2,6 @@
 
 {% block content %}
 
-{% if songs %}
-<ul>
-    {% for song in songs %}
-    <li>
-        {{ song.title }}
-    </li>
-    {% endfor %}
-</ul>
-{% else %}
 <form action="" method="POST">
     {% csrf_token %}
     <div class="form-group">
@@ -18,6 +9,27 @@
         <button type="submit" class="btn">검색</button>
     </div>
 </form>
-{% endif %}
+
+<ul><h3>아티스트명에 포함</h3>
+    {% for song in songs_from_artists %}
+    <li>
+        {{ song.title }}
+    </li>
+    {% endfor %}
+</ul>
+<ul><h3>앨범명에 포함</h3>
+    {% for song in songs_from_albums %}
+    <li>
+        {{ song.title }}
+    </li>
+    {% endfor %}
+</ul>
+<ul><h3>노래제목에 포함</h3>
+    {% for song in songs_from_title %}
+    <li>
+        {{ song.title }}
+    </li>
+    {% endfor %}
+</ul>
 
 {% endblock %}
