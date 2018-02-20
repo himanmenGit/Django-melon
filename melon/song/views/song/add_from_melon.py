@@ -6,6 +6,7 @@ from django.core.files import File
 from django.shortcuts import redirect
 from io import BytesIO
 
+from utils import *
 from ...models import Song
 
 __all__ = [
@@ -14,15 +15,11 @@ __all__ = [
 
 
 def get_detail(song_id):
-    import requests
-    from bs4 import BeautifulSoup
-
-    request_url = 'https://www.melon.com/song/detail.htm'
-    request_params = {
+    params = {
         'songId': song_id
     }
-    response = requests.get(request_url, request_params)
-    soup = BeautifulSoup(response.text, 'lxml')
+
+    soup = get_response(url=f'https://www.melon.com/song/detail.htm', params=params)
 
     if not soup:
         return
@@ -40,17 +37,21 @@ def get_detail(song_id):
     song_info_dict['genre'] = description_dict.get('장르')
 
     song_info_dict['title'] = div_entry.find('div', class_='song_name').strong.next_sibling.strip()
-    song_info_dict['artist'] = div_entry.find('div', class_='artist').find('a').find('span').text
+    song_info_dict['artist'] = div_entry.find('div', class_='artist').get_text()
+    artist_a = div_entry.find('div', class_='artist').find('a')
+    if artist_a:
+        song_info_dict['artist'] = artist_a.find('span').get_text()
 
     div_lyrics = soup.find('div', id='d_video_summary')
-    lyrics_list = list()
-    for item in div_lyrics.contents:
-        if item.name == 'br':
-            lyrics_list.append('\n')
-        elif type(item) is NavigableString:
-            lyrics_list.append(item.strip())
+    if div_lyrics:
+        lyrics_list = list()
+        for item in div_lyrics.contents:
+            if item.name == 'br':
+                lyrics_list.append('\n')
+            elif type(item) is NavigableString:
+                lyrics_list.append(item.strip())
 
-    song_info_dict['lyrics'] = ''.join(lyrics_list)
+        song_info_dict['lyrics'] = ''.join(lyrics_list)
 
     song_info_dict['url_image_cover'] = soup.select_one('#downloadfrm > div > div > div.thumb > a > img').get('src')
 
@@ -76,7 +77,7 @@ def song_add_from_melon(request):
             title = song_info_dict.setdefault('title', '')
             # artist = song_info_dict.setdefault('artist', '')
             lyrics = song_info_dict.setdefault('lyrics', '')
-            url_img_cover = song_info_dict.setdefault('url_image_cover', '').rsplit('.jpg', 1)[0]+'.jpg'
+            url_img_cover = song_info_dict.setdefault('url_image_cover', '').rsplit('.jpg', 1)[0] + '.jpg'
 
             # if release_date:
             #     release_date = datetime.strptime(release_date, '%Y.%m.%d')

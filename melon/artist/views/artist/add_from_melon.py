@@ -6,6 +6,7 @@ from datetime import datetime
 
 from io import BytesIO
 
+from utils import *
 from ...models import Artist
 
 __all__ = [
@@ -35,15 +36,10 @@ def get_artist_dt_dd(soup, css_selector, is_span_tag=False):
 
 
 def get_detail(artist_id):
-    import requests
-    from bs4 import BeautifulSoup
-
-    request_url = 'https://www.melon.com/artist/detail.htm'
-    request_params = {
-        'artistId': artist_id
+    params = {
+        'artistId': artist_id,
     }
-    response = requests.get(request_url, request_params)
-    soup = BeautifulSoup(response.text, 'lxml')
+    soup = get_response(url=f'https://www.melon.com/artist/detail.htm', params=params)
 
     if not soup:
         return
@@ -107,49 +103,49 @@ def artist_add_from_melon(request):
             artist_url_image_cover = request.POST['artist_url_image_cover']
         except Exception as e:
             print(e)
+        else:
+            name = artist_name
+            url_img_cover = artist_url_image_cover.rsplit('.jpg', 1)[0]+'.jpg'
+            real_name = artist_info_dict['info'].setdefault('본명', '')
+            nationality = artist_info_dict['info'].setdefault('국적', '')
+            birth_date = artist_info_dict['info'].setdefault('생일', '')
+            constellation = artist_info_dict['info'].setdefault('별자리', '')
+            blood_type = artist_info_dict['info'].setdefault('혈액형', '')
+            intro = artist_info_dict.setdefault('intro', '')
+
+            for short, full in Artist.CHOICES_BLOOD_TYPE:
+                if blood_type.strip() == full:
+                    blood_type = short
+                    break
+            else:
+                blood_type = Artist.BLOOD_TYPE_OTHER
+
+            if birth_date:
+                birth_date = datetime.strptime(birth_date, '%Y.%m.%d')
+            else:
+                birth_date = datetime.now().strftime('%Y-%m-%d')
+
+            response = requests.get(url_img_cover)
+            binary_data = response.content
+            temp_file = BytesIO()
+            temp_file.write(binary_data)
+            temp_file.seek(0)
+
+            artist, created = Artist.objects.update_or_create(
+                melon_id=artist_id,
+                defaults={
+                    'name': name,
+                    'real_name': real_name,
+                    'nationality': nationality,
+                    'birth_date': birth_date,
+                    'constellation': constellation,
+                    'blood_type': blood_type,
+                    'intro': intro,
+                }
+            )
+
+            from pathlib import Path
+            file_name = Path(url_img_cover).name
+            artist.img_profile.save(file_name, File(temp_file))
+        finally:
             return redirect('artist:artist-list')
-
-        name = artist_name
-        url_img_cover = artist_url_image_cover.rsplit('.jpg', 1)[0]+'.jpg'
-        real_name = artist_info_dict['info'].setdefault('본명', '')
-        nationality = artist_info_dict['info'].setdefault('국적', '')
-        birth_date = artist_info_dict['info'].setdefault('생일', '')
-        constellation = artist_info_dict['info'].setdefault('별자리', '')
-        blood_type = artist_info_dict['info'].setdefault('혈액형', '')
-        intro = artist_info_dict.setdefault('intro', '')
-
-        for short, full in Artist.CHOICES_BLOOD_TYPE:
-            if blood_type.strip() == full:
-                blood_type = short
-                break
-        else:
-            blood_type = Artist.BLOOD_TYPE_OTHER
-
-        if birth_date:
-            birth_date = datetime.strptime(birth_date, '%Y.%m.%d')
-        else:
-            birth_date = datetime.now().strftime('%Y-%m-%d')
-
-        response = requests.get(url_img_cover)
-        binary_data = response.content
-        temp_file = BytesIO()
-        temp_file.write(binary_data)
-        temp_file.seek(0)
-
-        artist, created = Artist.objects.update_or_create(
-            melon_id=artist_id,
-            defaults={
-                'name': name,
-                'real_name': real_name,
-                'nationality': nationality,
-                'birth_date': birth_date,
-                'constellation': constellation,
-                'blood_type': blood_type,
-                'intro': intro,
-            }
-        )
-
-        from pathlib import Path
-        file_name = Path(url_img_cover).name
-        artist.img_profile.save(file_name, File(temp_file))
-    return redirect('artist:artist-list')

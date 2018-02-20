@@ -30,24 +30,23 @@ def artist_search_from_melon(request):
         keyword = request.GET['keyword'].strip()
     except KeyError as e:
         print('Key Error', e)
-        keyword = None
+    else:
+        if keyword:
+            params = {
+                'q': keyword,
+            }
+            soup = get_response(url=f'https://www.melon.com/search/artist/index.htm', params=params)
 
-    if keyword:
-        params = {
-            'q': keyword,
-        }
-        soup = get_response(url=f'https://www.melon.com/search/artist/index.htm', params=params)
-
-        artist_info_list = list()
-        for artist_li in soup.select('#pageList > div > ul > li'):
-            artist_name = artist_li.select_one('div > div > dl > dt > a').get_text()
-            artist_url_image_cover = artist_li.select_one('div > a > img').get('src')
-            artist_id = artist_li.select_one('div > div > dl > dd.wrap_btn > button')['data-artist-no']
-            artist_info_list.append({
-                'artist_id': artist_id,
-                'name': artist_name,
-                'url_image_cover': artist_url_image_cover,
-            })
-        context['artist_info_list'] = artist_info_list
-
-    return render(request, 'artist/artist_search_from_melon.html', context)
+            artist_info_list = list()
+            for artist_li in soup.select('#pageList > div > ul > li'):
+                artist_name = artist_li.select_one('div > div > dl > dt > a').get_text()
+                artist_url_image_cover = artist_li.select_one('div > a > img').get('src')
+                artist_id = artist_li.select_one('div > div > dl > dd.wrap_btn > button')['data-artist-no']
+                artist_info_list.append({
+                    'artist_id': artist_id,
+                    'name': artist_name,
+                    'url_image_cover': artist_url_image_cover,
+                })
+            context['artist_info_list'] = artist_info_list
+    finally:
+        return render(request, 'artist/artist_search_from_melon.html', context)
