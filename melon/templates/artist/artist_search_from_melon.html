@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <h1><a href="{% url 'artist:artist-search-from-melon' %}">멜론에서 아티스트 검색</a></h1>
+    <form action="" method="GET">
+        <div class="form-group">
+            <input id="" type="text" name="keyword" class="" placeholder="" value="{{ request.GET.keyword }}">
+            <button type="submit" class="btn">검색</button>
+        </div>
+    </form>
+</div>
+
+<div class="container">
+    <h3>검색 결과</h3>
+    {% for artist_info in artist_info_list %}
+        <div class="row">
+            <div class="col-md-8">
+                <img src="{{ artist_info.url_image_cover }}" alt="" class="img-thumbnail">
+                <span>ID : {{ artist_info.artist_id }}</span>
+                <span>이름 : {{ artist_info.name }}</span>
+                <form style="display:inline" action="{% url 'artist:artist-add-from-melon' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="artist_id" value="{{ artist_info.artist_id }}">
+                    <input type="hidden" name="artist_name" value="{{ artist_info.name }}">
+                    <button type="submit" class="btn btn-primary">등록</button>
+                </form>
+             </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

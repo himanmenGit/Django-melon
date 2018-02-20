@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<a href="{% url 'songs:song-list' %}">노래리스트</a>
-<a href="{% url 'albums:album-list' %}">앨범리스트</a>
+<a href="{% url 'song:song-list' %}">노래리스트</a>
+<a href="{% url 'album:album-list' %}">앨범리스트</a>
 <ul>
     {% for artist in artists %}
     <li>
