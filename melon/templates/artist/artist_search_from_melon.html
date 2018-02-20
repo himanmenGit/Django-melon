@@ -24,6 +24,7 @@
                     {% csrf_token %}
                     <input type="hidden" name="artist_id" value="{{ artist_info.artist_id }}">
                     <input type="hidden" name="artist_name" value="{{ artist_info.name }}">
+                    <input type="hidden" name="artist_url_image_cover" value="{{ artist_info.url_image_cover }}">
                     <button type="submit" class="btn btn-primary">등록</button>
                 </form>
              </div>

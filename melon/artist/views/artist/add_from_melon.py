@@ -1,7 +1,10 @@
-import re
+import requests
 from bs4 import NavigableString
-from django.http import HttpResponse
+from django.core.files import File
 from django.shortcuts import redirect
+from datetime import datetime
+
+from io import BytesIO
 
 from ...models import Artist
 
@@ -97,21 +100,23 @@ def artist_add_from_melon(request):
     :return:
     """
     if request.method == 'POST':
-        artist_info_dict = dict()
         try:
             artist_id = request.POST['artist_id']
             artist_info_dict = get_detail(artist_id)
             artist_name = request.POST['artist_name']
+            artist_url_image_cover = request.POST['artist_url_image_cover']
         except Exception as e:
             print(e)
+            return redirect('artist:artist-list')
 
         name = artist_name
-        real_name = artist_info_dict['info']['본명']
-        nationality = artist_info_dict['info']['국적']
-        birth_date = artist_info_dict['info']['생일']
-        constellation = artist_info_dict['info']['별자리']
-        blood_type = artist_info_dict['info']['혈액형']
-        intro = artist_info_dict['intro']
+        url_img_cover = artist_url_image_cover.rsplit('.jpg', 1)[0]+'.jpg'
+        real_name = artist_info_dict['info'].setdefault('본명', '')
+        nationality = artist_info_dict['info'].setdefault('국적', '')
+        birth_date = artist_info_dict['info'].setdefault('생일', '')
+        constellation = artist_info_dict['info'].setdefault('별자리', '')
+        blood_type = artist_info_dict['info'].setdefault('혈액형', '')
+        intro = artist_info_dict.setdefault('intro', '')
 
         for short, full in Artist.CHOICES_BLOOD_TYPE:
             if blood_type.strip() == full:
@@ -120,19 +125,31 @@ def artist_add_from_melon(request):
         else:
             blood_type = Artist.BLOOD_TYPE_OTHER
 
-        from datetime import datetime
+        if birth_date:
+            birth_date = datetime.strptime(birth_date, '%Y.%m.%d')
+        else:
+            birth_date = datetime.strptime('2000.1.1', '%Y.%m.%d')
+
+        response = requests.get(url_img_cover)
+        binary_data = response.content
+        temp_file = BytesIO()
+        temp_file.write(binary_data)
+        temp_file.seek(0)
+
         artist, created = Artist.objects.update_or_create(
             melon_id=artist_id,
             defaults={
                 'name': name,
                 'real_name': real_name,
                 'nationality': nationality,
-                'birth_date': datetime.strptime(birth_date, '%Y.%m.%d'),
+                'birth_date': birth_date,
                 'constellation': constellation,
                 'blood_type': blood_type,
                 'intro': intro,
             }
         )
-        print(artist)
-        print(created)
+
+        from pathlib import Path
+        file_name = Path(url_img_cover).name
+        artist.img_profile.save(file_name, File(temp_file))
     return redirect('artist:artist-list')

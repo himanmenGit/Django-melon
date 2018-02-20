@@ -16,11 +16,20 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('artist/', include('artist.urls')),
     path('song/', include('song.urls')),
     path('album/', include('album.urls')),
-
 ]
+
+# settings.MEDIA_URL('/media/')로 시작하는 요청은
+# document_root인 settings.MEDIA_ROOT폴더(ROOT_DIR/.media)에서 파일을 찾아 리턴해준다
+urlpatterns += static(
+    settings.MEDIA_URL,
+    document_root=settings.MEDIA_ROOT,
+)
