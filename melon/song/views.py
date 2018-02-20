@@ -1,3 +1,6 @@
+from collections import namedtuple
+from typing import NamedTuple
+
 from django.db.models import Q
 from django.shortcuts import render
 
@@ -59,15 +62,19 @@ def song_search(request):
         print('KeyError 에러 발생!', e)
         keyword = None;
 
+    class SongInfo(NamedTuple):
+        type: str
+        q: Q
+
     if keyword:
         song_infos = list()
-        song_infos.append(('아티스트명', Q(album__artists__name__contains=keyword)))
-        song_infos.append(('앨범명', Q(album__title__contains=keyword)))
-        song_infos.append(('노래제목', Q(title__contains=keyword)))
+        song_infos.append(SongInfo(type='아티스트명', q=Q(album__artists__name__contains=keyword)))
+        song_infos.append(SongInfo(type='앨범명', q=Q(album__title__contains=keyword)))
+        song_infos.append(SongInfo(type='노래제목', q=Q(title__contains=keyword)))
 
-        for song_type, song_Q in song_infos:
+        for type, q in song_infos:
             context['song_infos'].append({
-                'type': song_type,
-                'songs': Song.objects.filter(song_Q),
+                'type': type,
+                'songs': Song.objects.filter(q),
             })
     return render(request, 'song/song_search.html', context)
