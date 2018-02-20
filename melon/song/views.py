@@ -1,5 +1,3 @@
-from django.db.models import Q
-from django.http import HttpResponse
 from django.shortcuts import render
 
 from .models import Song
@@ -52,16 +50,17 @@ def song_search(request):
     :return:
     """
     context = dict()
-    if request.method == 'POST':
-        keyword = request.POST['keyword'].strip()
-        if keyword:
-            # songs = Song.objects.filter(Q(title__contains=keyword) |
-            #                             Q(album__title__contains=keyword) |
-            #                             Q(album__artists__name__contains=keyword)).distinct()
-            songs_from_artists = Song.objects.filter(album__artists__name__contains=keyword)
-            songs_from_albums = Song.objects.filter(album__title__contains=keyword)
-            songs_from_title = Song.objects.filter(title__contains=keyword)
-            context['songs_from_artists'] = songs_from_artists
-            context['songs_from_albums'] = songs_from_albums
-            context['songs_from_title'] = songs_from_title
+    try:
+        keyword = request.GET['keyword'].strip()
+    except KeyError as e:
+        print('KeyError 에러 발생!', e)
+        keyword = None;
+
+    if keyword:
+        songs_from_artists = Song.objects.filter(album__artists__name__contains=keyword)
+        songs_from_albums = Song.objects.filter(album__title__contains=keyword)
+        songs_from_title = Song.objects.filter(title__contains=keyword)
+        context['songs_from_artists'] = songs_from_artists
+        context['songs_from_albums'] = songs_from_albums
+        context['songs_from_title'] = songs_from_title
     return render(request, 'song/song_search.html', context)
