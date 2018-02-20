@@ -50,6 +50,8 @@ class Song(models.Model):
         blank=True,
         null=True,
     )
+    melon_id = models.CharField('멜론 Song ID', max_length=20, blank=True, null=True, unique=True)
+    img_profile = models.ImageField('프로필 이미지', upload_to='song', blank=True)
     title = models.CharField('곡 제목', max_length=100)
     genre = models.CharField('장르', max_length=100, blank=True, null=True)
     lyrics = models.TextField('가사', blank=True)
@@ -72,8 +74,10 @@ class Song(models.Model):
     def __str__(self):
         # 가수명 - 곡제목 (앨범명)
         # TWICE (트와이스) - Heart Shaker (Merry & Happy)
-        return '{artists} - {title} ({album})'.format(
-            artists=', '.join(self.album.artists.values_list('name', flat=True)),
+        return '{artists} {title} ({album})'.format(
+            # artists=', '.join(self.album.artists.values_list('name', flat=True)),
+            artists='아티스트 준비중',
             title=self.title,
-            album=self.album.title,
+            # album=self.album.title,
+            album='앨범명 준비중',
         )

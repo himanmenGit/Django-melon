@@ -1,5 +1,7 @@
 from django.shortcuts import render
 
+from utils import *
+
 __all__ = [
     'artist_search_from_melon',
 ]
@@ -31,15 +33,10 @@ def artist_search_from_melon(request):
         keyword = None
 
     if keyword:
-        import requests
-        from bs4 import BeautifulSoup
-
-        request_url = 'https://www.melon.com/search/artist/index.htm'
-        request_params = {
+        params = {
             'q': keyword,
         }
-        response = requests.get(request_url, request_params)
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = get_response(url=f'https://www.melon.com/search/artist/index.htm', params=params)
 
         artist_info_list = list()
         for artist_li in soup.select('#pageList > div > ul > li'):

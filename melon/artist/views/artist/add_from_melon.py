@@ -128,7 +128,7 @@ def artist_add_from_melon(request):
         if birth_date:
             birth_date = datetime.strptime(birth_date, '%Y.%m.%d')
         else:
-            birth_date = datetime.strptime('2000.1.1', '%Y.%m.%d')
+            birth_date = datetime.now().strftime('%Y-%m-%d')
 
         response = requests.get(url_img_cover)
         binary_data = response.content

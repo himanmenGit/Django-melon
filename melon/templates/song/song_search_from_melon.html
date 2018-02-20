@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container">
-    <h1><a href="{% url 'artist:song-search-from-melon' %}">멜론에서 노래 검색</a></h1>
+    <h1><a href="{% url 'song:song-search-from-melon' %}">멜론에서 노래 검색</a></h1>
     <form action="" method="GET">
         <div class="form-group">
             <input id="" type="text" name="keyword" class="" placeholder="" value="{{ request.GET.keyword }}">
@@ -14,10 +14,21 @@
 
 <div class="container">
     <h3>검색 결과</h3>
-    {% for artist_info in artist_info_list %}
+    {% for song_info in song_info_list %}
         <div class="row">
-            <div class="col-md-8">
-
+            <div class="col-md-12">
+                <span>ID : {{ song_info.song_id }}</span>
+                <span>제목 : {{ song_info.title }}</span>
+                <span>아티스트 : {{ song_info.artist }}</span>
+                <span>앨범명 : {{ song_info.album }}</span>
+                <form style="display:inline" action="{% url 'song:song-add-from-melon' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="song_id" value="{{ song_info.song_id }}">
+                    <input type="hidden" name="title" value="{{ song_info.title }}">
+                    <input type="hidden" name="artist" value="{{ song_info.artist }}">
+                    <input type="hidden" name="album" value="{{ song_info.album }}">
+                    <button type="submit" class="btn btn-primary">등록</button>
+                </form>
              </div>
         </div>
     {% endfor %}
