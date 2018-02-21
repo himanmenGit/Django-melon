@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from utils import *
+from crawler.utils import *
 
 __all__ = [
     'artist_search_from_melon',

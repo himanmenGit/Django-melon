@@ -1,12 +1,10 @@
 import requests
 from bs4 import NavigableString
-from django.core.files import File
+from django.core.files.base import ContentFile
 from django.shortcuts import redirect
 from datetime import datetime
 
-from io import BytesIO
-
-from utils import *
+from crawler.utils import *
 from ...models import Artist
 
 __all__ = [
@@ -123,13 +121,13 @@ def artist_add_from_melon(request):
             if birth_date:
                 birth_date = datetime.strptime(birth_date, '%Y.%m.%d')
             else:
-                birth_date = datetime.now().strftime('%Y-%m-%d')
+                birth_date = None;
 
             response = requests.get(url_img_cover)
             binary_data = response.content
-            temp_file = BytesIO()
-            temp_file.write(binary_data)
-            temp_file.seek(0)
+            # temp_file = BytesIO()
+            # temp_file.write(binary_data)
+            # temp_file.seek(0)
 
             artist, created = Artist.objects.update_or_create(
                 melon_id=artist_id,
@@ -146,6 +144,7 @@ def artist_add_from_melon(request):
 
             from pathlib import Path
             file_name = Path(url_img_cover).name
-            artist.img_profile.save(file_name, File(temp_file))
+            # artist.img_profile.save(file_name, File(temp_file))
+            artist.img_profile.save(file_name, ContentFile(binary_data))
         finally:
             return redirect('artist:artist-list')
