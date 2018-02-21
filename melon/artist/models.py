@@ -19,7 +19,7 @@ class Artist(models.Model):
         (BLOOD_TYPE_OTHER, '기타'),
     )
     melon_id = models.CharField('멜론 Artist ID', max_length=20, blank=True, null=True, unique=True)
-    img_profile = models.ImageField('프로필 이미지', upload_to=dynamic_profile_img_path, blank=True)
+    img_profile = models.ImageField('프로필 이미지', upload_to='artist', blank=True)
     name = models.CharField('이름', max_length=50)
     real_name = models.CharField('본명', max_length=50, blank=True)
     nationality = models.CharField('국적', max_length=50, blank=True)

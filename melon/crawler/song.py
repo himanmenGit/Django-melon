@@ -1,4 +1,7 @@
-from .utils import get_response
+import re
+from bs4 import NavigableString
+
+from .utils import *
 
 __all__ = [
     'song_search_from_melon_crawler',
@@ -44,6 +47,10 @@ def get_song_detail_crawler(song_id):
                 lyrics_list.append(item.strip())
 
         song_info_dict['lyrics'] = ''.join(lyrics_list)
+
+    p = re.compile(r'javascript:melon.link.goAlbumDetail[(]\'(\d+)\'[)]')
+    album_id = p.search(str(dl)).group(1)
+    song_info_dict['album_id'] = album_id
 
     song_info_dict['url_image_cover'] = soup.select_one('#downloadfrm > div > div > div.thumb > a > img').get('src')
 

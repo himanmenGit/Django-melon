@@ -1,75 +1,14 @@
 import requests
-from bs4 import NavigableString
 from django.core.files.base import ContentFile
 from django.shortcuts import redirect
 from datetime import datetime
 
-from crawler.utils import *
+from crawler import *
 from ...models import Artist
 
 __all__ = [
     'artist_add_from_melon',
 ]
-
-
-def get_artist_dt_dd(soup, css_selector, is_span_tag=False):
-    dt_dd_list = list()
-    artist_dl = soup.select_one(css_selector)
-    if artist_dl:
-        for dt, dd in zip(artist_dl.find_all('dt'), artist_dl.find_all('dd')):
-            dt_dd_list.append(dt.get_text(strip=True))
-            if is_span_tag:
-                dt_dd_span = dd.select_one('span')
-                if dt_dd_span:
-                    dt_dd_list.append(dt_dd_span.get_text(strip=True))
-                else:
-                    dt_dd_list.append(dd.get_text(strip=True))
-            else:
-                dt_dd_list.append(dd.get_text(strip=True))
-
-        dt_dd_iter = iter(dt_dd_list)
-        return dict(zip(dt_dd_iter, dt_dd_iter))
-    else:
-        return {}
-
-
-def get_detail(artist_id):
-    params = {
-        'artistId': artist_id,
-    }
-    soup = get_response(url=f'https://www.melon.com/artist/detail.htm', params=params)
-
-    if not soup:
-        return
-
-    artist_info_dict = dict()
-    # ==================== 간단 정보 ===================== #
-
-    # 아티스트 간단 프로필 div
-    artist_simple_div = soup.select_one('#conts > div.wrap_dtl_atist > div > div.wrap_atist_info')
-
-    # 아티스트 이름
-    artist_name = artist_simple_div.select_one('p')
-    if artist_name:
-        artist_info_dict['name'] = artist_name.get_text()
-
-    # 아티스트 신상 정보
-    artist_detail_normal_info = get_artist_dt_dd(soup, '#conts > div.section_atistinfo04 > dl')
-    artist_info_dict['info'] = artist_detail_normal_info
-
-    # 아티스트 소개
-    if soup.select_one('#conts > div.section_atistinfo02'):
-        artist_detail_introduce_div = soup.find('div', id='d_artist_intro')
-        introduce_list = list()
-        for item in artist_detail_introduce_div.contents:
-            if item.name == 'br':
-                introduce_list.append('\n')
-            elif type(item) is NavigableString:
-                introduce_list.append(item.strip())
-
-        artist_detail_introduce = ''.join(introduce_list)
-        artist_info_dict['intro'] = artist_detail_introduce
-    return artist_info_dict
 
 
 def artist_add_from_melon(request):
@@ -96,14 +35,14 @@ def artist_add_from_melon(request):
     if request.method == 'POST':
         try:
             artist_id = request.POST['artist_id']
-            artist_info_dict = get_detail(artist_id)
+            artist_info_dict = get_artist_detail_crawler(artist_id)
             artist_name = request.POST['artist_name']
             artist_url_image_cover = request.POST['artist_url_image_cover']
         except Exception as e:
             print(e)
         else:
             name = artist_name
-            url_img_cover = artist_url_image_cover.rsplit('.jpg', 1)[0]+'.jpg'
+            url_img_cover = artist_url_image_cover.rsplit('.jpg', 1)[0] + '.jpg'
             real_name = artist_info_dict['info'].setdefault('본명', '')
             nationality = artist_info_dict['info'].setdefault('국적', '')
             birth_date = artist_info_dict['info'].setdefault('생일', '')
@@ -125,9 +64,6 @@ def artist_add_from_melon(request):
 
             response = requests.get(url_img_cover)
             binary_data = response.content
-            # temp_file = BytesIO()
-            # temp_file.write(binary_data)
-            # temp_file.seek(0)
 
             artist, created = Artist.objects.update_or_create(
                 melon_id=artist_id,
@@ -144,7 +80,6 @@ def artist_add_from_melon(request):
 
             from pathlib import Path
             file_name = Path(url_img_cover).name
-            # artist.img_profile.save(file_name, File(temp_file))
             artist.img_profile.save(file_name, ContentFile(binary_data))
         finally:
             return redirect('artist:artist-list')
