@@ -1,11 +1,11 @@
 from .utils import *
 
 __all__ = [
-    'album_detail_crawler',
+    'get_album_detail_crawler',
 ]
 
 
-def album_detail_crawler(album_id):
+def get_album_detail_crawler(album_id):
     params = {
         'albumId': album_id
     }

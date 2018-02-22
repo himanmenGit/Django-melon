@@ -1,45 +1,57 @@
+import re
+import requests
+from django.core.files.base import ContentFile
 from django.db import models
 
-
-# 내가 한거
-# from album.models import Album
-# from artist.models import Artist
-#
-#
-# class Song(models.Model):
-#     title = models.CharField('제목', max_length=100)
-#     album = models.ForeignKey(Album, on_delete=models.CASCADE)
-#     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
-#     is_title = models.BooleanField('타이틀곡입니까', default=False)
-
-# 클래스 매니저님
-# Artist
-#   - Album
-#       - Song
-#       - Song
-#       - Song
-#       - Song
-# from album.models import Album
-# from artist.models import Artist
-#
-#
-# class Song(models.Model):
-#     title = models.CharField('제목', max_length=255)
-#     album = models.ForeignKey(Album, on_delete=models.CASCADE)
-#     artist = models.ManyToManyField(Artist, through='ArtistSong', related_name='+')
-#
-#     def __str__(self):
-#         return self.title
-#
-#
-# class ArtistSong(models.Model):
-#     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
-#     song = models.ForeignKey(Song, on_delete=models.CASCADE)
-#     demo_date = models.DateTimeField()
-#
-#     def __str__(self):
-#         return f'{self.artist.name} {self.song.title} '
 from album.models import Album
+from artist.models import Artist
+from crawler import get_song_detail_crawler
+
+
+class SongManager(models.Manager):
+    def update_or_create_from_melon(self, song_id):
+        """
+        song_id에 해당하는 Song 정보를 멜론사이트에서 가져와 update_or_create를 실행
+        이 때, 해당 Song의 Artist정보도 가져와 ArtistManaget.update_or_create_from_melon도 실행
+        :param song_id: 멜론 사이트에서의 곡 고유 ID
+        :return: (Song instance, Bool(Song created))
+        """
+        try:
+            song_info_dict = get_song_detail_crawler(song_id)
+        except Exception as e:
+            print(e)
+        else:
+            # artist 추가
+            artist_id = song_info_dict.setdefault('artist_id', '')
+            artist, created = Artist.objects.update_or_create_from_melon(artist_id)
+
+            album_id = song_info_dict.setdefault('album_id', '')
+            album, created = Album.objects.update_or_create_from_melon(album_id)
+
+            # song 추가
+            song, created = Song.objects.update_or_create(
+                melon_id=song_id,
+                defaults={
+                    'title': song_info_dict.setdefault('title', ''),
+                    'genre': song_info_dict.setdefault('genre', ''),
+                    'lyrics': song_info_dict.setdefault('lyrics', ''),
+                    'album': album,
+                }
+            )
+
+            m = re.search('.*?.jpg|.png|.gif[/?]', song_info_dict.setdefault('url_image_cover', ''))
+            if m:
+                url_img_cover = m.group()
+            response = requests.get(url_img_cover)
+            binary_data = response.content
+
+            from pathlib import Path
+            file_name = Path(url_img_cover).name
+            song.img_profile.save(file_name, ContentFile(binary_data))
+
+            song.artists.add(artist)
+
+            return song, created
 
 
 class Song(models.Model):
@@ -50,16 +62,16 @@ class Song(models.Model):
         blank=True,
         null=True,
     )
+    artists = models.ManyToManyField(
+        Artist,
+        verbose_name='아티스트 목록',
+        blank=True,
+    )
     melon_id = models.CharField('멜론 Song ID', max_length=20, blank=True, null=True, unique=True)
     img_profile = models.ImageField('프로필 이미지', upload_to='song', blank=True)
     title = models.CharField('곡 제목', max_length=100)
     genre = models.CharField('장르', max_length=100, blank=True, null=True)
     lyrics = models.TextField('가사', blank=True)
-
-    @property
-    def artists(self):
-        # self.album에 속한 전체 Artist의 QuerySet리턴
-        return self.album.artists.all()
 
     @property
     def release_date(self):
@@ -71,13 +83,14 @@ class Song(models.Model):
         # 2017.01.15
         return self.release_date.strftime('%Y.%m.%d')
 
+    objects = SongManager()
+
     def __str__(self):
         # 가수명 - 곡제목 (앨범명)
         # TWICE (트와이스) - Heart Shaker (Merry & Happy)
+
         return '{artists} {title} ({album})'.format(
-            # artists=', '.join(self.album.artists.values_list('name', flat=True)),
-            artists='아티스트 준비중',
+            artists=', '.join(self.artists.values_list('name', flat=True)),
             title=self.title,
-            # album=self.album.title,
-            album='앨범명 준비중',
+            album=self.album.title,
         )

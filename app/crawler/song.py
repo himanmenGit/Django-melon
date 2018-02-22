@@ -32,10 +32,15 @@ def get_song_detail_crawler(song_id):
     song_info_dict['genre'] = description_dict.get('장르')
 
     song_info_dict['title'] = div_entry.find('div', class_='song_name').strong.next_sibling.strip()
-    song_info_dict['artist'] = div_entry.find('div', class_='artist').get_text()
     artist_a = div_entry.find('div', class_='artist').find('a')
     if artist_a:
         song_info_dict['artist'] = artist_a.find('span').get_text()
+
+        # downloadfrm > div > div > div.entry > div.info > div.artist > a
+
+        p = re.compile(r'javascript:melon.link.goArtistDetail[(]\'(\d+)\'[)]')
+        artist_id = p.search(str(artist_a)).group(1)
+        song_info_dict['artist_id'] = artist_id
 
     div_lyrics = soup.find('div', id='d_video_summary')
     if div_lyrics:

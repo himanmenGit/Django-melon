@@ -1,3 +1,4 @@
+import re
 from bs4 import NavigableString
 
 from .utils import *
@@ -39,21 +40,16 @@ def get_artist_detail_crawler(artist_id):
         return
 
     artist_info_dict = dict()
-    # ==================== 간단 정보 ===================== #
 
-    # 아티스트 간단 프로필 div
     artist_simple_div = soup.select_one('#conts > div.wrap_dtl_atist > div > div.wrap_atist_info')
 
-    # 아티스트 이름
-    artist_name = artist_simple_div.select_one('p')
-    if artist_name:
-        artist_info_dict['name'] = artist_name.get_text()
+    # 아티스트 본명
+    artist_info_dict['url_img_cover'] = soup.select_one('.wrap_dtl_atist .wrap_thumb #artistImgArea img').get('src')
+    artist_info_dict['name'] = artist_simple_div.select_one('.title_atist').contents[1]
 
-    # 아티스트 신상 정보
-    artist_detail_normal_info = get_artist_dt_dd(soup, '#conts > div.section_atistinfo04 > dl')
-    artist_info_dict['info'] = artist_detail_normal_info
-
+    # ==================== 상세 정보 ===================== #
     # 아티스트 소개
+
     if soup.select_one('#conts > div.section_atistinfo02'):
         artist_detail_introduce_div = soup.find('div', id='d_artist_intro')
         introduce_list = list()
@@ -65,6 +61,11 @@ def get_artist_detail_crawler(artist_id):
 
         artist_detail_introduce = ''.join(introduce_list)
         artist_info_dict['intro'] = artist_detail_introduce
+
+    # 아티스트 신상 정보
+    artist_detail_normal_info = get_artist_dt_dd(soup, '#conts > div.section_atistinfo04 > dl')
+    artist_info_dict['info'] = artist_detail_normal_info
+
     return artist_info_dict
 
 
