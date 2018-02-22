@@ -6,8 +6,8 @@ from django.core.files.base import ContentFile
 from django.shortcuts import redirect
 
 from ...models import Album
-from crawler import *
 from ...models import Song
+from crawler import *
 
 __all__ = [
     'song_add_from_melon',
