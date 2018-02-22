@@ -18,7 +18,12 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('index')
+
+    # POST/GET 상관없이 쏜다!
+    # 유저 인증 성공 했으면
+    if request.user.is_authenticated:
+        return redirect('index')
+    # 유저 인증 실패 했으면
     return render(request, 'members/login.html')
 
 
