@@ -26,10 +26,6 @@ def get_album_detail_crawler(album_id):
 
     album_release_date = description_dict.get('발매일')
 
-    print(album_title)
-    print(album_cover_img_url)
-    print(album_release_date)
-
     result_dict = dict()
     result_dict['album_title'] = album_title
     result_dict['album_cover_img_url'] = album_cover_img_url

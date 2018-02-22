@@ -1,5 +1,5 @@
 import re
-from bs4 import NavigableString
+from bs4 import NavigableString, Tag
 
 from .utils import *
 
@@ -56,6 +56,8 @@ def get_artist_detail_crawler(artist_id):
         for item in artist_detail_introduce_div.contents:
             if item.name == 'br':
                 introduce_list.append('\n')
+            elif type(item) is Tag:
+                introduce_list.append(item.string.strip())
             elif type(item) is NavigableString:
                 introduce_list.append(item.strip())
 
