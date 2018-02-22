@@ -18,6 +18,7 @@
     <header class="main-header">
         {% if request.user.is_authenticated %}
         <div>{{ request.user }}로 로그인 중입니다.</div>
+        <div><a href="{% url 'member-logout' %}">로그아웃</a></div>
         {% else %}
         <div><a href="{% url 'member-login' %}">로그인하세요</a></div>
         {% endif %}

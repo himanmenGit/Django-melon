@@ -1,8 +1,8 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 
 
-def login_veiw(request):
+def login_view(request):
     # POST 요청 일 때는
     # authenticate -> login 후 'index'로 redirect
     #   실패시에는 다시 GET 요청의 로직으로 이동
@@ -20,3 +20,8 @@ def login_veiw(request):
             login(request, user)
             return redirect('index')
     return render(request, 'members/login.html')
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('index')
