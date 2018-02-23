@@ -20,7 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from . import views
-from members.views import login_view, logout_view
+from members.views import login_view, logout_view, signup_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +30,7 @@ urlpatterns = [
     path('album/', include('album.urls')),
     path('login/', login_view, name='member-login'),
     path('logout/', logout_view, name='member-logout'),
+    path('signup/', signup_view, name='member-signup')
 ]
 
 # settings.MEDIA_URL('/media/')로 시작하는 요청은

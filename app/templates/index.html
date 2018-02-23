@@ -3,5 +3,8 @@
 {% block content %}
 <div>
     <h1>Index</h1>
+    {% if signup_msg %}
+    <h3>{{ signup_msg }}</h3>
+    {% endif %}
 </div>
 {% endblock %}

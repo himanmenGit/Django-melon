@@ -16,12 +16,6 @@
 <body>
   <div class="header-wrap">
     <header class="main-header">
-        {% if request.user.is_authenticated %}
-        <div>{{ request.user }}로 로그인 중입니다.</div>
-        <div><a href="{% url 'member-logout' %}">로그아웃</a></div>
-        {% else %}
-        <div><a href="{% url 'member-login' %}">로그인하세요</a></div>
-        {% endif %}
       <div class="search-container">
         <a href="{% url 'index' %}">
           <img src="{% static 'images/logo.png' %}" alt="" static="">
@@ -37,6 +31,17 @@
           <li><a href="{% url 'song:song-list' %}">곡</a></li>
         </ul>
       </nav>
+        <nav class="main-header-nav nav-right clearfix">
+        <ul class="clearfix">
+            {% if user.is_authenticated %}
+                <div>{{ request.user }}로 로그인 중입니다.</div>
+                <li><a href="{% url 'artist:artist-list' %}">로그아웃</a></li>
+            {% else %}
+                <li><a href="{% url 'artist:artist-list' %}">로그인</a></li>
+                <li><a href="{% url 'album:album-list' %}">회원가입</a></li>
+            {% endif %}
+        </ul>
+        </nav>
     </header>
   </div>
 

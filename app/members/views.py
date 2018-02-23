@@ -1,5 +1,7 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.shortcuts import render, redirect
+
+User = get_user_model()
 
 
 def login_view(request):
@@ -30,3 +32,27 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('index')
+
+
+def signup_view(request):
+    context = {
+        'errors': [],
+    }
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        password2 = request.POST['password2']
+
+        is_valid = True
+        if User.objects.filter(username=username).exists():
+            is_valid = False
+            context['errors'].append('User name already exists')
+        if password != password2:
+            is_valid = False
+            context['errors'].append('Password and Password2 is not equal')
+        if is_valid:
+            user = User.objects.create_user(username=username, password=password)
+            login(request, user)
+            return redirect('index')
+
+    return render(request, 'members/signup.html', context)
