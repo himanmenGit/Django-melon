@@ -39,3 +39,7 @@ header.main-header > nav.main-header-nav > ul > li > a {
   color: #333;
   font-weight: bold;
 }
+
+header.main-header > nav.nav-right {
+  float: right;
+}

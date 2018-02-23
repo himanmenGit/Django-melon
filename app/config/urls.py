@@ -28,9 +28,9 @@ urlpatterns = [
     path('artist/', include('artist.urls')),
     path('song/', include('song.urls')),
     path('album/', include('album.urls')),
-    path('login/', login_view, name='member-login'),
-    path('logout/', logout_view, name='member-logout'),
-    path('signup/', signup_view, name='member-signup')
+    path('login/', login_view, name='login'),
+    path('logout/', logout_view, name='logout'),
+    path('signup/', signup_view, name='signup')
 ]
 
 # settings.MEDIA_URL('/media/')로 시작하는 요청은

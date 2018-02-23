@@ -11,43 +11,44 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/header.css' %}">
     <link rel="stylesheet" href="{% static 'css/artist-list.css' %}">
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
 
 </head>
 <body>
-  <div class="header-wrap">
-    <header class="main-header">
-      <div class="search-container">
-        <a href="{% url 'index' %}">
-          <img src="{% static 'images/logo.png' %}" alt="" static="">
-        </a>
-        <div class="input-container">
-          <input type="text" class="search-input">
+<div class="header-wrap">
+    <header class="main-header clearfix">
+        <div class="search-container">
+            <a href="{% url 'index' %}">
+                <img src="{% static 'images/logo.png' %}" alt="" static="">
+            </a>
+            <div class="input-container">
+                <input type="text" class="search-input">
+            </div>
         </div>
-      </div>
-      <nav class="main-header-nav">
-        <ul class="clearfix">
-          <li><a href="{% url 'artist:artist-list' %}">아티스트</a></li>
-          <li><a href="{% url 'album:album-list' %}">앨범</a></li>
-          <li><a href="{% url 'song:song-list' %}">곡</a></li>
-        </ul>
-      </nav>
+        <nav class="main-header-nav clearfix">
+            <ul class="clearfix">
+                <li><a href="{% url 'artist:artist-list' %}">아티스트</a></li>
+                <li><a href="{% url 'album:album-list' %}">앨범</a></li>
+                <li><a href="{% url 'song:song-list' %}">곡</a></li>
+            </ul>
+        </nav>
         <nav class="main-header-nav nav-right clearfix">
-        <ul class="clearfix">
-            {% if user.is_authenticated %}
-                <div>{{ request.user }}로 로그인 중입니다.</div>
-                <li><a href="{% url 'artist:artist-list' %}">로그아웃</a></li>
-            {% else %}
-                <li><a href="{% url 'artist:artist-list' %}">로그인</a></li>
-                <li><a href="{% url 'album:album-list' %}">회원가입</a></li>
-            {% endif %}
-        </ul>
+            <ul class="clearfix">
+                {% if user.is_authenticated %}
+                <li><a href="">내 정보 ({{ request.user.username }})</a></li>
+                <li><a href="{% url 'logout' %}">로그아웃</a></li>
+                {% else %}
+                <li><a href="{% url 'login' %}">로그인</a></li>
+                <li><a href="{% url 'signup' %}">회원가입</a></li>
+                {% endif %}
+            </ul>
         </nav>
     </header>
-  </div>
+</div>
 
-  <div class="content-block">
-      {% block content %}
-      {% endblock %}
-  </div>
+<div class="content-block">
+    {% block content %}
+    {% endblock %}
+</div>
 </body>
 </html>
