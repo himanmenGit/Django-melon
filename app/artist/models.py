@@ -1,6 +1,3 @@
-from datetime import date
-
-import re
 from django.core.files.base import ContentFile, File
 from django.db import models
 
