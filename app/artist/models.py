@@ -58,6 +58,8 @@ class ArtistManager(models.Manager):
                 artist_id=artist_id,
                 ext=get_buffer_ext(temp_file)
             )
+            if artist.img_profile:
+                artist.img_profile.delete()
             artist.img_profile.save(file_name, File(temp_file))
 
             return artist, created

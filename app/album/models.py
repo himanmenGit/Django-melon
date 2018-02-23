@@ -15,6 +15,7 @@ class AlbumManager(models.Manager):
             print(e)
         else:
             # album 추가
+            url_img_cover = album_info.setdefault('album_cover_img_url', '')
             release_date = get_valid_date(album_info.setdefault('release_date', ''))
 
             album, created = Album.objects.get_or_create(
@@ -24,7 +25,6 @@ class AlbumManager(models.Manager):
                     'release_date': release_date,
                 }
             )
-            url_img_cover = album_info.setdefault('album_cover_img_url', '')
 
             temp_file = download(url_img_cover)
             file_name = '{album_id}.{ext}'.format(
