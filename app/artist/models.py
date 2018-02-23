@@ -1,11 +1,11 @@
-from datetime import datetime
+from datetime import date
 
 import re
-import requests
-from django.core.files.base import ContentFile
+from django.core.files.base import ContentFile, File
 from django.db import models
 
 from crawler import get_artist_detail_crawler
+from utils import *
 
 
 def dynamic_profile_img_path(instance, filename):
@@ -20,9 +20,10 @@ class ArtistManager(models.Manager):
             print(e)
         else:
             name = artist_info_dict.setdefault('name', '')
-            m = re.search('.*?.jpg|.png|.gif[/?]', artist_info_dict['url_img_cover'])
-            if m:
-                url_img_cover = m.group()
+            # m = re.search('.*?.jpg|.png|.gif[/?]', artist_info_dict['url_img_cover'])
+            # if m:
+            #     url_img_cover = m.group()
+            url_img_cover = artist_info_dict.setdefault('url_img_cover', '')
             real_name = artist_info_dict['info'].setdefault('본명', '')
             nationality = artist_info_dict['info'].setdefault('국적', '')
             birth_date = artist_info_dict['info'].setdefault('생일', '')
@@ -37,13 +38,7 @@ class ArtistManager(models.Manager):
             else:
                 blood_type = Artist.BLOOD_TYPE_OTHER
 
-            if birth_date:
-                birth_date = datetime.strptime(birth_date, '%Y.%m.%d')
-            else:
-                birth_date = None;
-
-            response = requests.get(url_img_cover)
-            binary_data = response.content
+            birth_date = get_valid_date(birth_date)
 
             artist, created = self.update_or_create(
                 melon_id=artist_id,
@@ -58,9 +53,12 @@ class ArtistManager(models.Manager):
                 }
             )
 
-            from pathlib import Path
-            file_name = Path(url_img_cover).name
-            artist.img_profile.save(file_name, ContentFile(binary_data))
+            temp_file = download(url_img_cover)
+            file_name = '{artist_id}.{ext}'.format(
+                artist_id=artist_id,
+                ext=get_buffer_ext(temp_file)
+            )
+            artist.img_profile.save(file_name, File(temp_file))
 
             return artist, created
 

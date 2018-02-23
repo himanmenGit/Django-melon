@@ -1,11 +1,10 @@
-import re
-import requests
-from django.core.files.base import ContentFile
+from django.core.files.base import ContentFile, File
 from django.db import models
 
 from album.models import Album
 from artist.models import Artist
 from crawler import get_song_detail_crawler
+from utils import *
 
 
 class SongManager(models.Manager):
@@ -40,15 +39,13 @@ class SongManager(models.Manager):
                 }
             )
 
-            m = re.search('.*?.jpg|.png|.gif[/?]', song_info_dict.setdefault('url_image_cover', ''))
-            if m:
-                url_img_cover = m.group()
-            response = requests.get(url_img_cover)
-            binary_data = response.content
-
-            from pathlib import Path
-            file_name = Path(url_img_cover).name
-            song.img_profile.save(file_name, ContentFile(binary_data))
+            url_img_cover = song_info_dict.setdefault('url_image_cover', '')
+            temp_file = download(url_img_cover)
+            file_name = '{song_id}.{ext}'.format(
+                song_id=song_id,
+                ext=get_buffer_ext(temp_file)
+            )
+            song.img_profile.save(file_name, File(temp_file))
 
             song.artists.add(artist)
 

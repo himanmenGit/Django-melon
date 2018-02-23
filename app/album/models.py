@@ -1,10 +1,10 @@
 import re
-import requests
-from datetime import datetime
-from django.core.files.base import ContentFile
+from datetime import date
+from django.core.files.base import ContentFile, File
 from django.db import models
 
 from crawler import get_album_detail_crawler
+from utils import *
 
 
 class AlbumManager(models.Manager):
@@ -15,22 +15,23 @@ class AlbumManager(models.Manager):
             print(e)
         else:
             # album 추가
+            release_date = get_valid_date(album_info.setdefault('release_date', ''))
+
             album, created = Album.objects.get_or_create(
                 album_id=album_id,
                 defaults={
                     'title': album_info['album_title'],
-                    'release_date': datetime.strptime(album_info['release_date'], '%Y.%m.%d')
+                    'release_date': release_date,
                 }
             )
-            m = re.search('.*?.jpg|.png|.gif[/?]', album_info['album_cover_img_url'])
-            if m:
-                url_img_cover = m.group()
-            response = requests.get(url_img_cover)
-            binary_data = response.content
+            url_img_cover = album_info.setdefault('album_cover_img_url', '')
 
-            from pathlib import Path
-            file_name = Path(url_img_cover).name
-            album.img_cover.save(file_name, ContentFile(binary_data))
+            temp_file = download(url_img_cover)
+            file_name = '{album_id}.{ext}'.format(
+                album_id=album_id,
+                ext=get_buffer_ext(temp_file)
+            )
+            album.img_cover.save(file_name, File(temp_file))
 
             return album, created
 
