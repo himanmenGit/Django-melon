@@ -42,20 +42,9 @@ def signup_view(request):
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            password2 = form.cleaned_data['password2']
-
-            is_valid = True
-
-            if User.objects.filter(username=username).exists():
-                form.add_error('username', '이미 사용되고 있는 아이디 입니다.')
-                is_valid = False
-            if password != password2:
-                form.add_error('password2', '비밀번호와 비밀번호 확인란이 값이 다릅니다.')
-                is_valid = False
-            if is_valid:
-                user = User.objects.create_user(username=username, password=password)
-                login(request, user)
-                return redirect('index')
+            user = User.objects.create_user(username=username, password=password)
+            login(request, user)
+            return redirect('index')
     else:
         form = SignupForm()
     context = {
