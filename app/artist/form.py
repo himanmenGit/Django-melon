@@ -4,13 +4,13 @@ from django import forms
 from .models import Artist
 
 __all__ = (
-    'ArtistAddForm',
+    'ArtistForm',
 )
 
 
 # ModelForm을 사용하여 Form을 만들면
 # Model에 있는 기능을 사용할 수 있다.
-class ArtistAddForm(forms.ModelForm):
+class ArtistForm(forms.ModelForm):
     class Meta:
         model = Artist
         fields = '__all__'

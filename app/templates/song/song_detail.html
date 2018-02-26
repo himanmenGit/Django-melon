@@ -6,9 +6,8 @@
         <button type="submit" class="btn btn-primary">노래 추가</button>
     </form>
     <ul>
-        {% for song in songs %}
         <li>
-            <a href="{% url 'song:song-detail' song_pk=song.pk %}">
+            <a href="">
                 <img src="{% if song.img_profile %} {{ song.img_profile.url}} {% endif %}" alt="" class="cover">
                 <div class="artist-info">
                     <div class="name">{{ song.title }}</div>
@@ -34,7 +33,6 @@
                 {% endif %}
             </a>
         </li>
-        {% endfor %}
     </ul>
 </div>
 {% endblock %}

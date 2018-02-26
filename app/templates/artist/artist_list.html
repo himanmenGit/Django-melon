@@ -21,13 +21,17 @@
                 </div>
 
                 {% if request.user.is_authenticated %}
-                <form action="{% url 'artist:artist-like-toggle' artist_pk=artist.pk %}" method="POST" style="display:inline-block">
+                <form action="{% url 'artist:artist-like-toggle' artist_pk=artist.pk %}" method="POST" style=float:left>
                     {% csrf_token %}
                     {% if request.user in artist.like_users.all %}
                         <button type="submit" class="btn-danger">좋아요 취소</button>
                     {% else %}
                         <button type="submit" class="btn-primary">좋아요</button>
                     {% endif %}
+                </form>
+                <form action="{% url 'artist:artist-edit' artist_pk=artist.pk %}" method="get" style=float:left>
+                    {% csrf_token %}
+                    <button type="submit" class="btn-warning">수정하기</button>
                 </form>
                 {% endif %}
             </a>

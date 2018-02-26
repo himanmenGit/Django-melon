@@ -22,6 +22,7 @@
 .artist-list-container ul li .artist-info {
   float: left;
   padding: 5px 0 0 15px;
+  width: 150px;
 }
 
 .artist-list-container ul li .artist-info .name {

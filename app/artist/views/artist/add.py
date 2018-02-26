@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 
-from ...form import ArtistAddForm
+from ...form import ArtistForm
 from ...models import Artist
 
 __all__ = [
@@ -36,12 +36,12 @@ def artist_add(request):
         #     intro=intro,
         # )
 
-        form = ArtistAddForm(request.POST, request.FILES)
+        form = ArtistForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('artist:artist-list')
     else:
-        form = ArtistAddForm()
+        form = ArtistForm()
 
-    context['artist_add_form'] = form
+    context['artist_form'] = form
     return render(request, 'artist/artist_add.html', context)

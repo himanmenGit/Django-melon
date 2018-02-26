@@ -7,7 +7,7 @@
       border-bottom: 1px solid #ddd;
       padding: 15px;
       height: 150px;
-      
+
       a {
         display: inline-block;
         color: #333;
@@ -21,7 +21,8 @@
       .artist-info {
         float: left;
         padding: 5px 0 0 15px;
-        
+        width: 150px;
+
         .name {
           font-weight: bold;
           font-size: 1.1rem;

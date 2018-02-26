@@ -9,10 +9,10 @@
 {% endif %}
 
 <div class="search-container container">
-    <h1><a href="">직접 아티스트 추가</a></h1>
+    <h1><a href="">직접 노래 추가</a></h1>
     <form action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        {% for field in artist_form %}
+        {% for field in song_form %}
             <div class="form-group">
                 <label for="{{ field.id_for_label }}">
                     {{ field.label }}
@@ -34,10 +34,10 @@
 <hr>
 
 <div class="melon-search-container container">
-    <h1><a href="{% url 'artist:artist-search-from-melon' %}">멜론에서 아티스트 검색</a></h1>
-    <form action="{% url 'artist:artist-search-from-melon' %}" method="GET">
+    <h1><a href="{% url 'song:song-search-from-melon' %}">멜론에서 노래 검색</a></h1>
+    <form action="{% url 'song:song-search-from-melon' %}" method="GET">
         <div class="form-group">
-            <input id="" type="text" name="keyword" class="form-control" placeholder="아티스트 검색" value="{{ request.GET.keyword }}">
+            <input id="" type="text" name="keyword" class="form-control" placeholder="노래 검색" value="{{ request.GET.keyword }}">
         </div>
         <button type="submit" class="btn">검색</button>
     </form>
