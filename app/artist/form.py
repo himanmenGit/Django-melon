@@ -14,7 +14,7 @@ class ArtistAddForm(forms.ModelForm):
     class Meta:
         model = Artist
         fields = '__all__'
-        exclude = ['melon_id']
+        exclude = ['melon_id', 'like_users']
         widgets = {
             # 'img_profile': forms.FileInput(
             #     attrs={'class': 'form-control'}

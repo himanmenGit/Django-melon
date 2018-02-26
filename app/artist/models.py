@@ -1,3 +1,6 @@
+from datetime import datetime
+
+from django.conf import settings
 from django.core.files.base import ContentFile, File
 from django.db import models
 
@@ -85,7 +88,55 @@ class Artist(models.Model):
     blood_type = models.CharField('혈액형', max_length=30, choices=CHOICES_BLOOD_TYPE, blank=True)
     intro = models.TextField('소개', blank=True)
 
+    like_users = models.ManyToManyField(
+        # User,
+        settings.AUTH_USER_MODEL,
+        through='ArtistLike',
+        related_name='like_artists',
+        blank=True,
+    )
+
     objects = ArtistManager()
 
     def __str__(self):
         return self.name
+
+    def toggle_like_user(self, user):
+        """
+        자신의 like_users에 주어진 user가 존재 하지 않으면 like_users에 추가 한다.
+        이미 존재할 경우에는 없앤다.
+
+        :param user:
+        :return:
+        """
+        # like_user_list = self.like_user_info_list
+        # like_user = like_user_list.filter(user=user)
+        # if like_user.exists():
+        #     like_user.filter(user=user)
+        #     return False
+        # else:
+        #     like_user_list.create(user=user)
+        #     return True
+        like, like_created = self.like_user_info_list.get_or_create(user=user)
+        if not like_created:
+            like.delete()
+        return like_created
+
+
+class ArtistLike(models.Model):
+    # Artist와 User(members.User)와의 관계를 나타내는 중개 모델
+    artist = models.ForeignKey(Artist, related_name='like_user_info_list', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='like_artist_info_list', on_delete=models.CASCADE)
+    created_date = models.DateField(auto_now_add=True)
+
+    class Meta:
+        unique_together = (
+            ('artist', 'user'),
+        )
+
+    def __str__(self):
+        return '"ArtistLike (User: {user}, Artist: {artist} Created: {created})'.format(
+            user=self.user.username,
+            artist=self.artist.name,
+            created=datetime.strftime(self.created_date, '%y.%m.%d'),
+        )
