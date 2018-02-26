@@ -82,10 +82,13 @@ def song_search_from_melon_crawler(keyword):
             title = title_s.get_text(strip=True)
         artist = tr.select_one('td:nth-of-type(4) span.checkEllipsisSongdefaultList').get_text(strip=True)
         album = tr.select_one('td:nth-of-type(5) a').get_text(strip=True)
+
+        from song.models import Song
         song_info_list.append({
             'song_id': song_id,
             'title': title,
             'artist': artist,
             'album': album,
+            'is_exist': Song.objects.filter(melon_id=song_id).exists(),
         })
     return song_info_list

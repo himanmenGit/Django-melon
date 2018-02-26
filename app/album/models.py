@@ -1,6 +1,7 @@
-import re
-from datetime import date
-from django.core.files.base import ContentFile, File
+from datetime import datetime
+
+from django.conf import settings
+from django.core.files.base import File
 from django.db import models
 
 from crawler import get_album_detail_crawler
@@ -40,7 +41,6 @@ class Album(models.Model):
     album_id = models.CharField(max_length=50, unique=True, blank=True, null=True)
     title = models.CharField(max_length=100)
     img_cover = models.ImageField('커버 이미지', upload_to='album', blank=True)
-    # artists = models.ManyToManyField(Artist, verbose_name='아티스트 목록')
     release_date = models.DateField('발매일')
 
     @property
@@ -50,14 +50,45 @@ class Album(models.Model):
 
     objects = AlbumManager()
 
+    like_users = models.ManyToManyField(
+        # User,
+        settings.AUTH_USER_MODEL,
+        through='AlbumLike',
+        related_name='like_albums',
+        blank=True,
+    )
+
     def __str__(self):
-        # 호호호빵 [휘성, 김태우]
-        # Merry & Happy [TWICE (트와이스)]
-        # 이렇게 나오도록 작성
-        #    전체 쿼리: self.artist.all()
-        #       valeus_list
-        # return '{title} [{artists}]'.format(
-        #     title=self.title,
-        #     artists=', '.join(self.artists.values_list('name', flat=True))
-        # )
         return self.title
+
+    def toggle_like_user(self, user):
+        """
+        자신의 like_users에 주어진 user가 존재 하지 않으면 like_users에 추가 한다.
+        이미 존재할 경우에는 없앤다.
+
+        :param user:
+        :return:
+        """
+        like, like_created = self.like_user_info_list.get_or_create(user=user)
+        if not like_created:
+            like.delete()
+        return like_created
+
+
+class AlbumLike(models.Model):
+    # Album와 User(members.User)와의 관계를 나타내는 중개 모델
+    album = models.ForeignKey(Album, related_name='like_user_info_list', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='like_album_info_list', on_delete=models.CASCADE)
+    created_date = models.DateField(auto_now_add=True)
+
+    class Meta:
+        unique_together = (
+            ('album', 'user'),
+        )
+
+    def __str__(self):
+        return '"AlbumLike (User: {user}, Album: {album} Created: {created})'.format(
+            user=self.user.username,
+            album=self.title,
+            created=datetime.strftime(self.created_date, '%y.%m.%d'),
+        )

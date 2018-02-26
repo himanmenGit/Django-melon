@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if form_error %}
+<div>
+    <p>
+    <h2>ERROR: [{{ form_error }}]</h2></p>
+</div>
+{% endif %}
+
+<div class="search-container container">
+    <h1><a href="">직접 앨범 추가</a></h1>
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in album_form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">
+            등록
+        </button>
+    </form>
+</div>
+
+<hr>
+
+<div class="melon-search-container container">
+    <h1><a href="{% url 'album:album-search-from-melon' %}">멜론에서 앨범 검색</a></h1>
+    <form action="{% url 'album:album-search-from-melon' %}" method="GET">
+        <div class="form-group">
+            <input id="" type="text" name="keyword" class="form-control" placeholder="앨범 검색" value="{{ request.GET.keyword }}">
+        </div>
+        <button type="submit" class="btn">검색</button>
+    </form>
+</div>
+{% endblock %}

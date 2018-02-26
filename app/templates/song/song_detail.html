@@ -10,11 +10,11 @@
             <a href="">
                 <img src="{% if song.img_profile %} {{ song.img_profile.url}} {% endif %}" alt="" class="cover">
                 <div class="artist-info">
-                    <div class="name">{{ song.title }}</div>
-                    <div>{{ song.album.title }}</div>
-                    <div>{{ song.genre }}</div>
+                    <div class="name">{{ song.title|truncatechars:15 }}</div>
+                    <div>{{ song.album.title|truncatechars:15 }}</div>
+                    <div>{{ song.genre|truncatechars:15 }}</div>
                     <div>{{ song.formatted_release_date }}</div>
-                    <div>{% for artist in song.artists.all %}{{ artist.name }}{% endfor %}</div>
+                    <div>{% for artist in song.artists.all %}{{ artist.name|truncatechars:15 }}{% endfor %}</div>
                 </div>
 
                 {% if request.user.is_authenticated %}

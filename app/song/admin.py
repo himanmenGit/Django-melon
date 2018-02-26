@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Song
+from .models import Song, SongLike
 
 admin.site.register(Song)
-# admin.site.register(ArtistSong)
+admin.site.register(SongLike)

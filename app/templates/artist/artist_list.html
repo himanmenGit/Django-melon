@@ -12,7 +12,7 @@
             <a href="{% url 'artist:artist-detail' artist_pk=artist.pk %}">
                 <img src="{% if artist.img_profile %} {{ artist.img_profile.url}} {% endif %}" alt="" class="cover">
                 <div class="artist-info">
-                    <div class="name">{{ artist.name }}</div>
+                    <div class="name">{{ artist.name|truncatechars:15 }}</div>
                     <div>{{ artist.real_name }}</div>
                     <div>{{ artist.nationality }}</div>
                     <div>{{ artist.birth_date }}</div>

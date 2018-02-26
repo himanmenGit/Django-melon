@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <h1><a href="{% url 'album:album-search-from-melon' %}">멜론에서 앨범 검색</a></h1>
+    <form action="" method="GET">
+        <div class="form-group">
+            <input id="" type="text" name="keyword" class="" placeholder="" value="{{ request.GET.keyword }}">
+            <button type="submit" class="btn">검색</button>
+        </div>
+    </form>
+</div>
+
+<div class="container">
+    {% for album_info in album_info_list %}
+        <div class="row">
+            <div class="col-md-12">
+                <img src="{{ album_info.url_image_cover }}" alt="" class="img-thumbnail">
+                <span>ID : {{ album_info.album_id }}</span>
+                <span>이름 : {{ album_info.album_title }}</span>
+                <form style="display:inline" action="{% url 'album:album-add-from-melon' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="album_id" value="{{ album_info.album_id }}">
+                    <input type="hidden" name="album_title" value="{{ album_info.title }}">
+                    <input type="hidden" name="url_image_cover" value="{ album_info.url_image_cover }}">
+                    {% if album_info.is_exist %}
+                        <button type="submit" class="btn btn-primary">DB에 업데이트</button>
+                    {% else %}
+                        <button type="submit" class="btn btn-primary">DB에 추가</button>
+                    {% endif %}
+                </form>
+             </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
