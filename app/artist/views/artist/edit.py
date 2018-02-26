@@ -5,7 +5,6 @@ from ...models import Artist
 
 __all__ = (
     'artist_edit',
-    'artist_like',
 )
 
 
@@ -35,10 +34,3 @@ def artist_edit(request, artist_pk):
     form = ArtistAddForm(instance=artist)
     context = {'artist_add_form': form}
     return render(request, 'artist/artist_edit.html', context)
-
-
-def artist_like(request, artist_pk):
-    # if request.method == 'POST':
-
-    return redirect('artist:artist-list')
-
