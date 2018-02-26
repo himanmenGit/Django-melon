@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if form_error %}
+<div>
+    <p>
+    <h2>ERROR: [{{ form_error }}]</h2></p>
+</div>
+{% endif %}
+
+<div class="search-container container">
+    <h1><a href="{% url 'artist:artist-add' %}">아티스트 수정</a></h1>
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in artist_add_form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">
+            수정
+        </button>
+    </form>
+</div>
+{% endblock %}

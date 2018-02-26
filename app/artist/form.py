@@ -1,6 +1,7 @@
+import datetime
 from django import forms
 
-from artist.models import Artist
+from .models import Artist
 
 __all__ = (
     'ArtistAddForm',
@@ -15,26 +16,30 @@ class ArtistAddForm(forms.ModelForm):
         fields = '__all__'
         exclude = ['melon_id']
         widgets = {
+            # 'img_profile': forms.FileInput(
+            #     attrs={'class': 'form-control'}
+            # ),
             'name': forms.TextInput(
-                attrs={'class': 'form-control'},
-            )
+                attrs={'class': 'form-control', 'placeholder': '이름'}
+            ),
+            'real_name': forms.TextInput(
+                attrs={'class': 'form-control', 'placeholder': '본명'}
+            ),
+            'nationality': forms.TextInput(
+                attrs={'class': 'form-control', 'placeholder': '국적'}
+            ),
+
+            'birth_date': forms.SelectDateWidget(
+                years=range(datetime.date.today().year - 100, datetime.date.today().year + 1),
+                attrs={'class': 'form-control'}
+            ),
+            'constellation': forms.TextInput(
+                attrs={'class': 'form-control', 'placeholder': '별자리'}
+            ),
+            'blood_type': forms.Select(
+                attrs={'class': 'form-control'}
+            ),
+            'intro': forms.Textarea(
+                attrs={'class': 'form-control', 'placeholder': '소개'}
+            ),
         }
-        # fields = [
-        #     'img_profile',
-        #     'name',
-        #     'real_name',
-        #     'nationality',
-        #     'birth_date',
-        #     'constellation',
-        #     'blood_type',
-        #     'intro',
-        # ]
-    # melon_id = forms.CharField(label='아티스트 ID')
-    # img_profile = forms.ImageField(label='프로필 이미지')
-    # real_name = forms.CharField(label='이름', max_length=50)
-    # name = forms.CharField(label='본명', max_length=50)
-    # nationality = forms.CharField(label='국적', max_length=50)
-    # birth_date = forms.DateField(label='생년월일')
-    # constellation = forms.CharField(label='별자리', max_length=30)
-    # blood_type = forms.CharField(label='혈액형', max_length=30)
-    # intro = forms.CharField(label='소개', widget=forms.Textarea)
