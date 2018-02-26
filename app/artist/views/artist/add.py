@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 
+from ...form import ArtistAddForm
 from ...models import Artist
 
 __all__ = [
@@ -17,22 +18,30 @@ def artist_add(request):
 
     }
     if request.method == 'POST':
-        name = request.POST['artist_name']
-        realname = request.POST['realname']
-        nationality = request.POST['nationality']
-        birth_date = request.POST['birth_date']
-        constellation = request.POST['constellation']
-        blood_type = request.POST['blood_type']
-        intro = request.POST['intro']
+        # name = request.POST['artist_name']
+        # realname = request.POST['realname']
+        # nationality = request.POST['nationality']
+        # birth_date = request.POST['birth_date']
+        # constellation = request.POST['constellation']
+        # blood_type = request.POST['blood_type']
+        # intro = request.POST['intro']
+        #
+        # Artist.objects.create(
+        #     name=name,
+        #     real_name=realname,
+        #     nationality=nationality,
+        #     birth_date=birth_date,
+        #     constellation=constellation,
+        #     blood_type=blood_type,
+        #     intro=intro,
+        # )
 
-        Artist.objects.create(
-            name=name,
-            real_name=realname,
-            nationality=nationality,
-            birth_date=birth_date,
-            constellation=constellation,
-            blood_type=blood_type,
-            intro=intro,
-        )
-        return redirect('artists:artist-list')
+        form = ArtistAddForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('artist:artist-list')
+    else:
+        form = ArtistAddForm()
+
+    context['artist_add_form'] = form
     return render(request, 'artist/artist_add.html', context)

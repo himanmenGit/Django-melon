@@ -23,8 +23,12 @@
                     {% csrf_token %}
                     <input type="hidden" name="artist_id" value="{{ artist_info.artist_id }}">
                     <input type="hidden" name="artist_name" value="{{ artist_info.name }}">
-                    <input type="hidden" name="artist_url_image_cover" value="{{ artist_info.url_image_cover }}">
-                    <button type="submit" class="btn btn-primary">등록</button>
+                    <input type="hidden" name="artist_url_image_cover" value="{ artist_info.url_image_cover }}">
+                    {% if artist_info.is_exist %}
+                        <button type="submit" class="btn btn-primary">DB에 업데이트</button>
+                    {% else %}
+                        <button type="submit" class="btn btn-primary">DB에 추가</button>
+                    {% endif %}
                 </form>
              </div>
         </div>

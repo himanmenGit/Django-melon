@@ -4,7 +4,7 @@
 
 <div class="artist-list-container">
     <form action="{% url 'artist:artist-add' %}" method="get">
-        <button type="submit">아티스트 추가</button>
+        <button type="submit" class="btn btn-primary">아티스트 추가</button>
     </form>
     <ul>
         {% for artist in artists %}

@@ -1,4 +1,3 @@
-import re
 from bs4 import NavigableString, Tag
 
 from .utils import *
@@ -82,9 +81,12 @@ def artist_search_from_melon_crawler(keyword):
         artist_name = artist_li.select_one('div > div > dl > dt > a').get_text()
         artist_url_image_cover = artist_li.select_one('div > a > img').get('src')
         artist_id = artist_li.select_one('div > div > dl > dd.wrap_btn > button')['data-artist-no']
+
+        from artist.models import Artist
         artist_info_list.append({
             'artist_id': artist_id,
             'name': artist_name,
             'url_image_cover': artist_url_image_cover,
+            'is_exist': Artist.objects.filter(melon_id=artist_id).exists(),
         })
     return artist_info_list

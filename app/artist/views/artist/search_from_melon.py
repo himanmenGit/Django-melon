@@ -27,6 +27,7 @@ def artist_search_from_melon(request):
     context = dict()
 
     try:
+
         keyword = request.GET['keyword'].strip()
     except KeyError as e:
         print('Key Error', e)
