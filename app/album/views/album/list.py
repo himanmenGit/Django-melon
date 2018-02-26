@@ -1,11 +1,11 @@
 from django.shortcuts import render
 
-from album.models import Album
+from ...models import Album
 
+__all__ = (
+    'album_list',
+)
 
-# album, song에 대해서
-# detail, edit, like-toggle
-# 기능 구현
 
 def album_list(request):
     albums = Album.objects.all()

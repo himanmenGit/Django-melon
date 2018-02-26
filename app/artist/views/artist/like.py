@@ -1,6 +1,6 @@
 from django.shortcuts import redirect
 
-from artist.models import Artist
+from ...models import Artist
 
 __all__ = (
     'artist_like_toggle',

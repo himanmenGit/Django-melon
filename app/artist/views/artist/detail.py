@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 
-from artist.models import Artist
+from ...models import Artist
 
 __all__ = (
     'artist_detail',

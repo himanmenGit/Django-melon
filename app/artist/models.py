@@ -109,14 +109,6 @@ class Artist(models.Model):
         :param user:
         :return:
         """
-        # like_user_list = self.like_user_info_list
-        # like_user = like_user_list.filter(user=user)
-        # if like_user.exists():
-        #     like_user.filter(user=user)
-        #     return False
-        # else:
-        #     like_user_list.create(user=user)
-        #     return True
         like, like_created = self.like_user_info_list.get_or_create(user=user)
         if not like_created:
             like.delete()

@@ -1,9 +1,4 @@
-import requests
-from django.core.files.base import ContentFile
 from django.shortcuts import redirect
-from datetime import datetime
-
-from crawler import *
 from ...models import Artist
 
 __all__ = [

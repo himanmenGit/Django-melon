@@ -11,16 +11,19 @@ class User(AbstractUser):
         :param user, artist:
         :return:
         """
-        # like_artist_list = self.like_artist_info_list
-        # like_artist = like_artist_list.filter(artist=artist)
-        # if like_artist.exists():
-        #     like_artist.delete()
-        #     return True
-        # else:
-        #     like_artist_list.create(artist=artist)
-        #     return False
-
         like, like_created = self.like_artist_info_list.get_or_create(artist=artist)
+        if not like_created:
+            like.delete()
+        return like_created
+
+    def toggle_like_song(self, song):
+        like, like_created = self.like_song_info_list.get_or_create(song=song)
+        if not like_created:
+            like.delete()
+        return like_created
+
+    def toggle_like_album(self, album):
+        like, like_created = self.like_album_info_list.get_or_create(album=album)
         if not like_created:
             like.delete()
         return like_created

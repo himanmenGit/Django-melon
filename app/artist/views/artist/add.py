@@ -1,7 +1,6 @@
 from django.shortcuts import redirect, render
 
 from ...form import ArtistForm
-from ...models import Artist
 
 __all__ = [
     'artist_add',
@@ -18,24 +17,6 @@ def artist_add(request):
 
     }
     if request.method == 'POST':
-        # name = request.POST['artist_name']
-        # realname = request.POST['realname']
-        # nationality = request.POST['nationality']
-        # birth_date = request.POST['birth_date']
-        # constellation = request.POST['constellation']
-        # blood_type = request.POST['blood_type']
-        # intro = request.POST['intro']
-        #
-        # Artist.objects.create(
-        #     name=name,
-        #     real_name=realname,
-        #     nationality=nationality,
-        #     birth_date=birth_date,
-        #     constellation=constellation,
-        #     blood_type=blood_type,
-        #     intro=intro,
-        # )
-
         form = ArtistForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
