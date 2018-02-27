@@ -44,6 +44,8 @@ AUTHENTICATION_BACKENDS = [
     'members.backends.FacebookBackend',
 ]
 
+YOUTUBE_API_KEY = 'AIzaSyBWApBRtBKaGS7hfL80pICiSh9iA-QaaCw'
+
 ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'members.User'
@@ -64,6 +66,7 @@ INSTALLED_APPS = [
     'song.apps.SongConfig',
     'album.apps.AlbumConfig',
     'members.apps.MembersConfig',
+    'youtubes.apps.YoutubesConfig',
 ]
 
 MIDDLEWARE = [
