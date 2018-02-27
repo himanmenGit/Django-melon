@@ -1,6 +1,6 @@
 import requests
 from django.conf import settings
-from django.contrib.auth import get_user_model, login
+from django.contrib.auth import get_user_model, login, authenticate
 from django.shortcuts import redirect
 
 User = get_user_model()
@@ -11,6 +11,14 @@ __all__ = (
 
 
 def facebook_login(request):
+    # GET parameter가 왔을 것으로 가정
+    code = request.GET.get('code')
+    user = authenticate(request, code=code)
+    login(request, user)
+    return redirect('index')
+
+
+def facebook_login_backup(request):
     # code 로 부터 AccessToken 가져 오기
     params = dict()
 
@@ -51,9 +59,9 @@ def facebook_login(request):
 
     '''
     {
-        'id': '1956941341000445', 
-        'name': '박수민', 
-        'picture': 
+        'id': '1956941341000445',
+        'name': '박수민',
+        'picture':
             {
                 'data': {
                     'height': 2048, 'is_silhouette': False,
