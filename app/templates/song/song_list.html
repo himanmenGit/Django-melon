@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load song_extras %}
 
 {% block content %}
 <div class="artist-list-container container">
@@ -32,6 +33,7 @@
                     <button type="submit" class="btn-warning">수정하기</button>
                 </form>
                 {% endif %}
+                <span style="float:left">{{ song.lyrics|ellipsis_line:2|linebreaksbr }}</span>
             </a>
         </li>
         {% endfor %}
