@@ -19,18 +19,19 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from . import views
-from members.views import login_view, logout_view, signup_view
+from . import views as indexviews
+from members import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index, name='index'),
+    path('', indexviews.index, name='index'),
     path('artist/', include('artist.urls')),
     path('song/', include('song.urls')),
     path('album/', include('album.urls')),
-    path('login/', login_view, name='login'),
-    path('logout/', logout_view, name='logout'),
-    path('signup/', signup_view, name='signup')
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('signup/', views.signup_view, name='signup'),
+    path('facebook-login/', views.facebook_login, name='facebook-login'),
 ]
 
 # settings.MEDIA_URL('/media/')로 시작하는 요청은

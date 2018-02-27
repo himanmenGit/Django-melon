@@ -1,9 +1,9 @@
-from django.contrib.auth import authenticate, login, logout, get_user_model
-from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.shortcuts import redirect, render
 
-from .forms import SignupForm
-
-User = get_user_model()
+__all__ = (
+    'login_view',
+)
 
 
 def login_view(request):
@@ -29,25 +29,3 @@ def login_view(request):
         return redirect('index')
     # 유저 인증 실패 했으면
     return render(request, 'members/login.html')
-
-
-def logout_view(request):
-    logout(request)
-    return redirect('index')
-
-
-def signup_view(request):
-    if request.method == 'POST':
-        form = SignupForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = User.objects.create_user(username=username, password=password)
-            login(request, user)
-            return redirect('index')
-    else:
-        form = SignupForm()
-    context = {
-        'signup_form': form
-    }
-    return render(request, 'members/signup.html', context)

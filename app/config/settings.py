@@ -37,6 +37,9 @@ SECRET_KEY = '85i&#0_vz32ea@1e5@ho&(kszu=p$r)_i30f0hf!^$b7t$9*jj'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+FACEBOOK_APP_ID = '556722268030664'
+FACEBOOK_SECRET_CODE = '0c326ad6b08e4f1749c259b9f0eb042f'
+
 ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'members.User'
