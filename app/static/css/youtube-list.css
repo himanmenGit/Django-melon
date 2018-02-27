@@ -1,0 +1,32 @@
+.youtube-db-list-container ul li {
+  float: right;
+  width: 100%;
+  box-sizing: border-box;
+  border-bottom: 1px solid #ddd;
+  padding: 15px;
+  height: 150px;
+}
+
+.youtube-db-list-container ul li a {
+  display: inline-block;
+  color: #333;
+}
+
+.youtube-db-list-container ul li img.cover {
+  float: left;
+  width: 120px;
+  height: 120px;
+  border: 1px solid #ddd;
+}
+
+.youtube-db-list-container ul li .youtube-info {
+  float: left;
+  padding: 5px 0 0 15px;
+  width: 200px;
+}
+
+.youtube-db-list-container ul li .youtube-info .name {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}

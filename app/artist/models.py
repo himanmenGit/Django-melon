@@ -6,6 +6,7 @@ from django.db import models
 
 from crawler import get_artist_detail_crawler
 from utils import *
+from youtubes.models import Youtube
 
 
 def dynamic_profile_img_path(instance, filename):
@@ -96,6 +97,14 @@ class Artist(models.Model):
         blank=True,
     )
 
+    like_youtube = models.ManyToManyField(
+        # Youtube,
+        Youtube,
+        through='YoutubeLike',
+        related_name='like_youtube',
+        blank=True,
+    )
+
     objects = ArtistManager()
 
     def __str__(self):
@@ -130,5 +139,23 @@ class ArtistLike(models.Model):
         return '"ArtistLike (User: {user}, Artist: {artist} Created: {created})'.format(
             user=self.user.username,
             artist=self.artist.name,
+            created=datetime.strftime(self.created_date, '%y.%m.%d'),
+        )
+
+
+class YoutubeLike(models.Model):
+    artist = models.ForeignKey(Artist, related_name='like_youtube_artist_info_list', on_delete=models.CASCADE)
+    youtube = models.ForeignKey(Youtube, related_name='like_youtube_info_list', on_delete=models.CASCADE)
+    created_date = models.DateField(auto_now_add=True)
+
+    class Meta:
+        unique_together = (
+            ('artist', 'youtube'),
+        )
+
+    def __str__(self):
+        return '"YoutubeLike (Artist: {artist}, Youtube: {youtube} Created: {created})'.format(
+            artist=self.artist.name,
+            youtube=self.youtube.title,
             created=datetime.strftime(self.created_date, '%y.%m.%d'),
         )

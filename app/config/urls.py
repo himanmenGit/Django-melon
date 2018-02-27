@@ -32,6 +32,8 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('signup/', views.signup_view, name='signup'),
     path('facebook-login/', views.facebook_login, name='facebook-login'),
+
+    path('youtube/', include('youtubes.urls')),
 ]
 
 # settings.MEDIA_URL('/media/')로 시작하는 요청은

@@ -2,40 +2,97 @@
 
 {% block content %}
 
-<div class="artist-list-container container">
-    <form action="{% url 'artist:artist-add' %}" method="get" class="form-inline justify-content-center">
-        <button type="submit" class="btn btn-primary">아티스트 추가</button>
-    </form>
-    <ul>
-        <li>
-            <a href="">
-                <img src="{% if artist.img_profile %} {{ artist.img_profile.url}} {% endif %}" alt="" class="cover">
-                <div class="artist-info">
-                    <div class="name">{{ artist.name|truncatechars:15 }}</div>
-                    <div>{{ artist.real_name }}</div>
-                    <div>{{ artist.nationality }}</div>
-                    <div>{{ artist.birth_date }}</div>
-                    <div>{{ artist.constellation }}</div>
-                    <div>{{ artist.get_blood_type_display }}</div>
-                </div>
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <div class="artist-list-container clearfix">
+                <form action="{% url 'artist:artist-add' %}" method="get" class="form-inline justify-content-center">
+                    <button type="submit" class="btn btn-primary">아티스트 추가</button>
+                </form>
+                <ul>
+                    <li>
+                        <a href="">
+                            <img src="{% if artist.img_profile %} {{ artist.img_profile.url}} {% endif %}" alt="" class="cover">
+                            <div class="artist-info">
+                                <div class="name">{{ artist.name|truncatechars:15 }}</div>
+                                <div>{{ artist.real_name }}</div>
+                                <div>{{ artist.nationality }}</div>
+                                <div>{{ artist.birth_date }}</div>
+                                <div>{{ artist.constellation }}</div>
+                                <div>{{ artist.get_blood_type_display }}</div>
+                            </div>
+                        </a>
 
-                {% if request.user.is_authenticated %}
-                <form action="{% url 'artist:artist-like-toggle' artist_pk=artist.pk %}" method="POST" style="float:left">
-                    {% csrf_token %}
-                    <input type="hidden" name="next-path" value={{ request.get_full_path }}>
-                    {% if request.user in artist.like_users.all %}
-                        <button type="submit" class="btn-danger">좋아요 취소</button>
-                    {% else %}
-                        <button type="submit" class="btn-primary">좋아요</button>
-                    {% endif %}
-                </form>
-                <form action="{% url 'artist:artist-edit' artist_pk=artist.pk %}" method="get" style=float:left>
-                    {% csrf_token %}
-                    <button type="submit" class="btn-warning">수정하기</button>
-                </form>
-                {% endif %}
-            </a>
-        </li>
-    </ul>
+                        {% if request.user.is_authenticated %}
+                        <form action="{% url 'artist:artist-like-toggle' artist_pk=artist.pk %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="next-path" value={{ request.get_full_path }}>
+                            {% if request.user in artist.like_users.all %}
+                                <button type="submit" class="btn-danger">좋아요 취소</button>
+                            {% else %}
+                                <button type="submit" class="btn-primary">좋아요</button>
+                            {% endif %}
+                        </form>
+                        <form action="{% url 'artist:artist-edit' artist_pk=artist.pk %}" method="get">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-warning">수정하기</button>
+                        </form>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+            <div class="artist-list-container clearfix">
+                <ul>
+                <h3>유투브 동영상</h3>
+                    {% for youtube in youtube_list %}
+                    <li>
+                        <a href="">
+                            <img src="{% if youtube.img_thumbnail %} {{ youtube.img_thumbnail }} {% endif %}" alt="" class="cover">
+                            <div class="youtube-info youtube-info-width">
+                                <div class="name">{{ youtube.title }}</div>
+                                <div>{{ youtube.description|truncatechars:50 }}</div>
+                                <div>{{ youtube.channel_title }}</div>
+                            </div>
+                        </a>
+                        {% if request.user.is_authenticated %}
+                        <form action="{% url 'youtube:youtube-add' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="etag" value='{{ youtube.etag }}'>
+                            <input type="hidden" name="video_id" value='{{ youtube.video_id }}'>
+                            <input type="hidden" name="channel_id" value='{{ youtube.channelId }}'>
+                            <input type="hidden" name="title" value='{{ youtube.title }}'>
+                            <input type="hidden" name="channel_title" value='{{ youtube.channel_title }}'>
+                            <input type="hidden" name="description" value='{{ youtube.description }}'>
+                            <input type="hidden" name="img_thumbnail" value='{{ youtube.img_thumbnail }}'>
+                            <input type="hidden" name="artist_pk" value='{{ artist.pk }}'>
+                            <button type="submit" class="btn-warning">DB에 등록</button>
+                        </form>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="youtube-db-list-container clearfix">
+                <ul>
+                <h3>디비 유투브 동영상</h3>
+                    {% for youtube_db in youtube_db_list %}
+                    <li>
+                        <a href="">
+                            <img src="{% if youtube_db.img_thumbnail %} {{ youtube_db.img_thumbnail.url }} {% endif %}" alt="" class="cover">
+                            <div class="youtube-info youtube-info-width">
+                                <div class="name">{{ youtube_db.title }}</div>
+                                <div>{{ youtube_db.description|truncatechars:50 }}</div>
+                                <div>{{ youtube_db.channel_title }}</div>
+                            </div>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

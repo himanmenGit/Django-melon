@@ -1,17 +1,13 @@
-.artist-list-container {
-  border-right: 1px solid #ddd;
+.youtube-db-list-container {
   ul {
     li {
-      float: left;
+      float: right;
       width: 100%;
       box-sizing: border-box;
       border-bottom: 1px solid #ddd;
       padding: 15px;
       height: 150px;
 
-      form {
-        float:right
-      }
       a {
         display: inline-block;
         color: #333;
@@ -22,18 +18,16 @@
         height: 120px;
         border: 1px solid #ddd;
       }
-      .artist-info,.youtube-info {
+      .youtube-info {
         float: left;
         padding: 5px 0 0 15px;
         width: 200px;
+
         .name {
           font-weight: bold;
           font-size: 1.1rem;
           margin-bottom: 4px;
         }
-      }
-      .youtube-info-width{
-        width: 200px;
       }
     }
   }

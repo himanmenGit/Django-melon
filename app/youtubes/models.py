@@ -2,6 +2,7 @@ from django.db import models
 
 
 class Youtube(models.Model):
+    etag = models.CharField('etag', max_length=100, unique=True)
     video_id = models.CharField('Video ID', max_length=20, blank=True)
     channel_id = models.CharField('Channel ID', max_length=50, blank=True)
     title = models.CharField('제목', max_length=100, blank=True)

@@ -1,10 +1,18 @@
+.artist-list-container {
+  border-right: 1px solid #ddd;
+}
+
 .artist-list-container ul li {
   float: left;
-  width: 50%;
+  width: 100%;
   box-sizing: border-box;
   border-bottom: 1px solid #ddd;
   padding: 15px;
   height: 150px;
+}
+
+.artist-list-container ul li form {
+  float: right;
 }
 
 .artist-list-container ul li a {
@@ -19,14 +27,18 @@
   border: 1px solid #ddd;
 }
 
-.artist-list-container ul li .artist-info {
+.artist-list-container ul li .artist-info, .artist-list-container ul li .youtube-info {
   float: left;
   padding: 5px 0 0 15px;
-  width: 150px;
+  width: 200px;
 }
 
-.artist-list-container ul li .artist-info .name {
+.artist-list-container ul li .artist-info .name, .artist-list-container ul li .youtube-info .name {
   font-weight: bold;
   font-size: 1.1rem;
   margin-bottom: 4px;
+}
+
+.artist-list-container ul li .youtube-info-width {
+  width: 200px;
 }
