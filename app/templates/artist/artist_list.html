@@ -8,7 +8,7 @@
     </form>
     <ul>
         {% for artist in artists %}
-        <li>
+        <li class="col-6">
             <a href="{% url 'artist:artist-detail' artist_pk=artist.pk %}">
                 <img src="{% if artist.img_profile %} {{ artist.img_profile.url}} {% endif %}" alt="" class="cover">
                 <div class="artist-info">
@@ -19,22 +19,21 @@
                     <div>{{ artist.constellation }}</div>
                     <div>{{ artist.get_blood_type_display }}</div>
                 </div>
-
-                {% if request.user.is_authenticated %}
-                <form action="{% url 'artist:artist-like-toggle' artist_pk=artist.pk %}" method="POST" style=float:left>
-                    {% csrf_token %}
-                    {% if request.user in artist.like_users.all %}
-                        <button type="submit" class="btn-danger">좋아요 취소</button>
-                    {% else %}
-                        <button type="submit" class="btn-primary">좋아요</button>
-                    {% endif %}
-                </form>
-                <form action="{% url 'artist:artist-edit' artist_pk=artist.pk %}" method="get" style=float:left>
-                    {% csrf_token %}
-                    <button type="submit" class="btn-warning">수정하기</button>
-                </form>
-                {% endif %}
             </a>
+            {% if request.user.is_authenticated %}
+            <form action="{% url 'artist:artist-like-toggle' artist_pk=artist.pk %}" method="POST">
+                {% csrf_token %}
+                {% if request.user in artist.like_users.all %}
+                    <button type="submit" class="btn-danger">좋아요 취소</button>
+                {% else %}
+                    <button type="submit" class="btn-primary">좋아요</button>
+                {% endif %}
+            </form>
+            <form action="{% url 'artist:artist-edit' artist_pk=artist.pk %}" method="get">
+                {% csrf_token %}
+                <button type="submit" class="btn-warning">수정하기</button>
+            </form>
+            {% endif %}
         </li>
         {% endfor %}
     </ul>

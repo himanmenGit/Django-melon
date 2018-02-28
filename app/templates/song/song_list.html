@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load song_extras %}
 
 {% block content %}
 <div class="artist-list-container container">
@@ -8,7 +7,7 @@
     </form>
     <ul>
         {% for song in songs %}
-        <li>
+        <li class="col-6">
             <a href="{% url 'song:song-detail' song_pk=song.pk %}">
                 <img src="{% if song.img_profile %} {{ song.img_profile.url}} {% endif %}" alt="" class="cover">
                 <div class="artist-info">
@@ -18,23 +17,21 @@
                     <div>{{ song.formatted_release_date }}</div>
                     <div>{% for artist in song.artists.all %}{{ artist.name|truncatechars:15 }}{% endfor %}</div>
                 </div>
-
-                {% if request.user.is_authenticated %}
-                <form action="{% url 'song:song-like-toggle' song_pk=song.pk %}" method="POST" style="float:left">
-                    {% csrf_token %}
-                    {% if request.user in song.like_users.all %}
-                        <button type="submit" class="btn-danger">좋아요 취소</button>
-                    {% else %}
-                        <button type="submit" class="btn-primary">좋아요</button>
-                    {% endif %}
-                </form>
-                <form action="{% url 'song:song-edit' song_pk=song.pk %}" method="get" style=float:left>
-                    {% csrf_token %}
-                    <button type="submit" class="btn-warning">수정하기</button>
-                </form>
-                {% endif %}
-                <span style="float:left">{{ song.lyrics|ellipsis_line:2|linebreaksbr }}</span>
             </a>
+            {% if request.user.is_authenticated %}
+            <form action="{% url 'song:song-like-toggle' song_pk=song.pk %}" method="POST">
+                {% csrf_token %}
+                {% if request.user in song.like_users.all %}
+                    <button type="submit" class="btn-danger">좋아요 취소</button>
+                {% else %}
+                    <button type="submit" class="btn-primary">좋아요</button>
+                {% endif %}
+            </form>
+            <form action="{% url 'song:song-edit' song_pk=song.pk %}" method="get">
+                {% csrf_token %}
+                <button type="submit" class="btn-warning">수정하기</button>
+            </form>
+            {% endif %}
         </li>
         {% endfor %}
     </ul>

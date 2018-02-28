@@ -43,10 +43,10 @@
             </div>
             <div class="artist-list-container clearfix">
                 <ul>
-                <h3>유투브 동영상</h3>
+                <h3>관련 유투브 동영상</h3>
                     {% for youtube in youtube_list %}
                     <li>
-                        <a href="">
+                        <a href="https://youtu.be/{{ youtube.video_id }}" target="_blank">
                             <img src="{% if youtube.img_thumbnail %} {{ youtube.img_thumbnail }} {% endif %}" alt="" class="cover">
                             <div class="youtube-info youtube-info-width">
                                 <div class="name">{{ youtube.title }}</div>
@@ -76,11 +76,11 @@
 
         <div class="col-6">
             <div class="youtube-db-list-container clearfix">
-                <ul>
+                <ul >
                 <h3>디비 유투브 동영상</h3>
                     {% for youtube_db in youtube_db_list %}
                     <li>
-                        <a href="">
+                        <a href="https://youtu.be/{{ youtube_db.video_id }}" target="_blank">
                             <img src="{% if youtube_db.img_thumbnail %} {{ youtube_db.img_thumbnail.url }} {% endif %}" alt="" class="cover">
                             <div class="youtube-info youtube-info-width">
                                 <div class="name">{{ youtube_db.title }}</div>

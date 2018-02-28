@@ -46,6 +46,7 @@ def artist_detail(request, artist_pk):
         'part': 'snippet',
         'q': artist.name,
         'maxResults': max_item,
+        'type': 'video,channel'
     }
     youtube_list = get_artist_youtube_detail(requests.get(url, youtube_params).json())
     youtube_db_list = artist.like_youtube.all()
