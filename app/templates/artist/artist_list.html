@@ -20,6 +20,7 @@
                     <div>{{ artist.get_blood_type_display }}</div>
                 </div>
             </a>
+            <div>
             {% if request.user.is_authenticated %}
             <form action="{% url 'artist:artist-like-toggle' artist_pk=artist.pk %}" method="POST">
                 {% csrf_token %}
@@ -34,6 +35,7 @@
                 <button type="submit" class="btn-warning">수정하기</button>
             </form>
             {% endif %}
+            </div>
         </li>
         {% endfor %}
     </ul>

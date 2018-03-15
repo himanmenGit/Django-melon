@@ -33,17 +33,13 @@ def artist_list(reqeust):
         'artists': list(
             {
                 'melon_id': artist.melon_id,
-                'name': artist.name
+                'name': artist.name,
+                'img_profile': artist.img_profile.url,
             }
             for artist in artists)
     }
-    # return HttpResponse(json.dumps(data), content_type='application/json')
-    return JsonResponse(data)
 
-    # data = {
-    #     'artists': json.dumps([dict(artist) for artist in artists.values('melon_id', 'name')]),
-    # }
-    # return HttpResponse(data)
+    return JsonResponse(data)
 
 # artist/       -> artist.urls.views
 # api/artist/   -> artist.urls.apis
