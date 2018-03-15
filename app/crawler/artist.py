@@ -56,7 +56,7 @@ def get_artist_detail_crawler(artist_id):
             if item.name == 'br':
                 introduce_list.append('\n')
             elif type(item) is Tag:
-                introduce_list.append(item.string.strip())
+                introduce_list.append(item.text.strip())
             elif type(item) is NavigableString:
                 introduce_list.append(item.strip())
 

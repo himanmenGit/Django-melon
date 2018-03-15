@@ -21,11 +21,13 @@ from django.conf.urls.static import static
 
 from . import views as indexviews
 from members import views
+from sms.views import send_sms
+from tinyemail.views import send_email
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', indexviews.index, name='index'),
-    path('artist/', include('artist.urls')),
+    path('artist/', include('artist.urls.views')),
     path('song/', include('song.urls')),
     path('album/', include('album.urls')),
     path('login/', views.login_view, name='login'),
@@ -34,6 +36,10 @@ urlpatterns = [
     path('facebook-login/', views.facebook_login, name='facebook-login'),
 
     path('youtube/', include('youtubes.urls')),
+    path('sms/send/', send_sms, name='send-sms'),
+    path('email/send/', send_email, name='send-email'),
+
+    path('api/artist/', include('artist.urls.apis')),
 ]
 
 # settings.MEDIA_URL('/media/')로 시작하는 요청은

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+    <form action="{% url 'send-sms' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group ">
+            <label for="to_number">폰번호</label>
+            <input type="text" name="to_number" value="" id="to_number" class="form-control" placeholder="010-0000-0000" required>
+        </div>
+        <div class="form-group ">
+            <label for="to_text">메세지</label>
+            <input type="text" name="to_text" value="" id="to_text" class="form-control" placeholder="안녕하세요" required>
+        </div>
+        <button type="submit" class="btn btn-primary">문자 보내기</button>
+    </form>
+</div>
+
+{% endblock %}

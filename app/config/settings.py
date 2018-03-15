@@ -46,6 +46,15 @@ AUTHENTICATION_BACKENDS = [
 
 YOUTUBE_API_KEY = 'AIzaSyBWApBRtBKaGS7hfL80pICiSh9iA-QaaCw'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = 'django.himanmen@gmail.com'
+EMAIL_HOST_PASSWORD = 'zhni7a0t^^'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
 ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'members.User'
@@ -67,6 +76,8 @@ INSTALLED_APPS = [
     'album.apps.AlbumConfig',
     'members.apps.MembersConfig',
     'youtubes.apps.YoutubesConfig',
+    'sms.apps.SmsConfig',
+    'tinyemail.apps.TinyemailConfig',
 ]
 
 MIDDLEWARE = [
