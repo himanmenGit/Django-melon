@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.files import File
 from django.db import models
 
@@ -10,6 +11,15 @@ __all__ = (
 
 
 class ArtistManager(models.Manager):
+    def to_dict(self):
+        artists = self.get_queryset()
+        artist_list = list()
+        for item in self.values():
+            item['img_profile'] = settings.MEDIA_URL + dict(item)['img_profile']
+            artist_list.append(dict(item))
+
+        return artist_list
+
     def update_or_create_from_melon(self, artist_id):
         try:
             artist_info_dict = get_artist_detail_crawler(artist_id)

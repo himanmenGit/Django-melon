@@ -20,21 +20,25 @@
                     <div>{{ artist.get_blood_type_display }}</div>
                 </div>
             </a>
-            <div>
-            {% if request.user.is_authenticated %}
-            <form action="{% url 'artist:artist-like-toggle' artist_pk=artist.pk %}" method="POST">
-                {% csrf_token %}
-                {% if request.user in artist.like_users.all %}
-                    <button type="submit" class="btn-danger">좋아요 취소</button>
-                {% else %}
-                    <button type="submit" class="btn-primary">좋아요</button>
-                {% endif %}
-            </form>
-            <form action="{% url 'artist:artist-edit' artist_pk=artist.pk %}" method="get">
-                {% csrf_token %}
-                <button type="submit" class="btn-warning">수정하기</button>
-            </form>
-            {% endif %}
+            <div style="float:right">
+                <div>
+                    {% if request.user.is_authenticated %}
+                    <form action="{% url 'artist:artist-like-toggle' artist_pk=artist.pk %}" method="POST">
+                        {% csrf_token %}
+                        {% if request.user in artist.like_users.all %}
+                        <button type="submit" class="btn-danger">좋아요 취소</button>
+                        {% else %}
+                        <button type="submit" class="btn-primary">좋아요</button>
+                        {% endif %}
+                    </form>
+                </div>
+                <div>
+                    <form action="{% url 'artist:artist-edit' artist_pk=artist.pk %}" method="get">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-warning">수정하기</button>
+                    </form>
+                    {% endif %}
+                </div>
             </div>
         </li>
         {% endfor %}

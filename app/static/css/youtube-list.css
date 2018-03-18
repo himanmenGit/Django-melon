@@ -30,3 +30,6 @@
   font-size: 1.1rem;
   margin-bottom: 4px;
 }
+.youtube-db-list-container ul li .youtube-info-width {
+  width: 200px;
+}

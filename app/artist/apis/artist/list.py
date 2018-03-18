@@ -27,18 +27,11 @@ def artist_list(reqeust):
     :param reqeust:
     :return:
     """
-    # localhost:8000/api/artist/
+
     artists = Artist.objects.all()
     data = {
-        'artists': list(
-            {
-                'melon_id': artist.melon_id,
-                'name': artist.name,
-                'img_profile': artist.img_profile.url,
-            }
-            for artist in artists)
+        'artists': [artist.to_json() for artist in artists]
     }
-
     return JsonResponse(data)
 
 # artist/       -> artist.urls.views
