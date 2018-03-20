@@ -16,33 +16,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from django.conf import settings
-from django.conf.urls.static import static
-
-from . import views as indexviews
 from sms.views import send_sms
 from tinyemail.views import send_email
+from ..views import index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', indexviews.index, name='index'),
+    path('', index, name='index'),
+
+    path('', include('members.urls.views')),
+
     path('artist/', include('artist.urls.views')),
     path('song/', include('song.urls')),
     path('album/', include('album.urls')),
 
-    path('', include('members.urls.views')),
-
     path('youtube/', include('youtubes.urls')),
     path('sms/send/', send_sms, name='send-sms'),
     path('email/send/', send_email, name='send-email'),
-
-    path('api/artist/', include('artist.urls.apis')),
-    path('api/members/', include('members.urls.apis')),
 ]
-
-# settings.MEDIA_URL('/media/')로 시작하는 요청은
-# document_root인 settings.MEDIA_ROOT폴더(ROOT_DIR/.media)에서 파일을 찾아 리턴해준다
-urlpatterns += static(
-    settings.MEDIA_URL,
-    document_root=settings.MEDIA_ROOT,
-)
