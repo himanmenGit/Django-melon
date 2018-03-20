@@ -1,9 +1,9 @@
 from django.urls import path
 
-from .. import apis
+from ..apis.artist import ArtistListView, ArtistDetailView
 
 ap_name = 'artist'
 urlpatterns = [
-    path('', apis.artist_list, name='artist-list'),
-    path('drf/', apis.ArtistListView.as_view(), name='artist-list2'),
+    path('', ArtistListView.as_view(), name='artist-list'),
+    path('<int:pk>/', ArtistDetailView.as_view(), name='artist-detail'),
 ]

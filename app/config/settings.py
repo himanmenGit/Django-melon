@@ -61,7 +61,13 @@ AUTH_USER_MODEL = 'members.User'
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000',
 )
-
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -74,6 +80,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_extensions',
     'rest_framework',
+    'rest_framework.authtoken',
 
     'artist.apps.ArtistConfig',
     'song.apps.SongConfig',

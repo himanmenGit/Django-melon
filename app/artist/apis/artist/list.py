@@ -1,38 +1,34 @@
-import json
+from rest_framework import generics
 
-from django.http import JsonResponse, HttpResponse
-
-from artist.models import Artist
+from utils.pagination import SmallSetPagination
+from ...serializers import ArtistSerializer
+from ...models import Artist
 
 __all__ = (
-    'artist_list',
+    'ArtistListView',
+    'ArtistDetailView',
 )
 
 
-def artist_list(reqeust):
-    """
-    data: {
-        ''artists': {
-            {
-                'melon_id': ...
-                'name': ...,
-            },
-            {
-                'melon_id': ...
-                'name': ...,
-            },
-            ...
-        }
-    }
-    :param reqeust:
-    :return:
-    """
+class ArtistListView(generics.ListCreateAPIView):
+    # getnerics의 요소를 사용해서
+    # ArtistListCreateView,
+    # ArtistRetrieveUpdateDestroyView
+    #   2개를 구현
+    #   URL과 연결
+    #   Postman에 API 테스트 구현
+    #   다 실행해보기
+    queryset = Artist.objects.all()
+    serializer_class = ArtistSerializer
 
-    artists = Artist.objects.all()
-    data = {
-        'artists': [artist.to_json() for artist in artists]
-    }
-    return JsonResponse(data)
+    pagination_class = SmallSetPagination
 
-# artist/       -> artist.urls.views
-# api/artist/   -> artist.urls.apis
+    def get(self, request, *args, **kwargs):
+        print('request.user:', request.user)
+        # return self.list(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
+
+
+class ArtistDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Artist.objects.all()
+    serializer_class = ArtistSerializer
