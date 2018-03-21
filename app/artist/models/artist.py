@@ -51,6 +51,9 @@ class Artist(models.Model):
 
     objects = ArtistManager()
 
+    class Meta:
+        ordering = ['-pk']
+
     def __str__(self):
         return self.name
 
