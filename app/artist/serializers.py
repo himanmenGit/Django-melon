@@ -1,20 +1,21 @@
 from rest_framework import serializers
 
-from members.serializer import UserSerializer
-from youtubes.serializers import ArtistYouTubeSerializer
+from members.serializers import UserSerializer
+from youtubes.serializers import YouTubeSerializer
 from .models import Artist
 
 
 class ArtistSerializer(serializers.ModelSerializer):
-    like_users = UserSerializer(
-        many=True,
-        read_only=True,
-    )
-    like_youtube = ArtistYouTubeSerializer(
-        many=True,
-        read_only=True,
-    )
+    like_users = UserSerializer(many=True, read_only=True)
+    like_youtube = YouTubeSerializer(many=True, read_only=True)
 
     class Meta:
         model = Artist
-        fields = '__all__'
+        fields = (
+            'pk',
+            'name',
+            'img_profile',
+
+            'like_users',
+            'like_youtube',
+        )

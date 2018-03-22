@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.db import models
+from rest_framework import serializers
 
 from .artist import Artist
 from youtubes.models import Youtube
@@ -25,3 +26,4 @@ class YoutubeLike(models.Model):
             youtube=self.youtube.title,
             created=datetime.strftime(self.created_date, '%y.%m.%d'),
         )
+
