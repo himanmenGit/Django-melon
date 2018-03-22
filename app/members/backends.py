@@ -2,10 +2,64 @@ import requests
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files import File
+from rest_framework import status
 
 from utils import download, get_buffer_ext
 
 User = get_user_model()
+
+
+class APIFacebookBackend:
+    CLIENT_ID = settings.FACEBOOK_APP_ID
+    CLIENT_SECRET = settings.FACEBOOK_SECRET_CODE
+    URL_ACCESS_TOKEN = 'https://graph.facebook.com/v2.12/oauth/access_token'
+    URL_ME = 'https://graph.facebook.com/v2.12/me'
+
+    def authenticate(self, request, access_token):
+        def get_user_info(user_access_token):
+            params_user = {
+                'access_token': user_access_token,
+                'fields': ','.join([
+                    'id',
+                    'name',
+                    'picture.width(2500)',
+                    'first_name',
+                    'last_name',
+                ]),
+            }
+            response = requests.get(self.URL_ME, params=params_user)
+            if response.status_code == status.HTTP_200_OK:
+                response_dict = response.json()
+                return response_dict
+            return None
+
+        try:
+            user_info = get_user_info(access_token)
+            facebook_id = user_info['id']
+            facebook_name = user_info['name']
+            facebook_url_picture = user_info['picture']['data']['url']
+            facebook_first_name = user_info['first_name']
+            facebook_last_name = user_info['last_name']
+            try:
+                user = User.objects.get(username=facebook_id)
+            except User.DoesNotExist:
+                user = User.objects.create_user(
+                    username=facebook_id,
+                    first_name=facebook_first_name,
+                    last_name=facebook_last_name,
+                    img_profile_url=facebook_url_picture,
+                )
+
+            return user
+        except Exception as e:
+            print(e)
+            return None
+
+    def get_user(self, user_id):
+        try:
+            return User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return None
 
 
 class FacebookBackend:

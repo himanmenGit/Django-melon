@@ -4,6 +4,7 @@ from django.db import models
 
 class User(AbstractUser):
     img_profile = models.ImageField(upload_to='user', blank=True)
+    img_profile_url = models.URLField(blank=True, default='')
 
     def toggle_like_artist(self, artist):
         """
