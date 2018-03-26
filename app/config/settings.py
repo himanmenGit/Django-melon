@@ -23,6 +23,8 @@ STATIC_DIR = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(ROOT_DIR, '.media')
 MEDIA_URL = '/media/'
 # 프로젝트 정적파일들을 검색 (% static %}) 할 디렉토리 목록
+
+STATIC_ROOT = os.path.join(ROOT_DIR, '.static')
 STATICFILES_DIRS = [
     STATIC_DIR,
 ]

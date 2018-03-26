@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, permissions
 
 from utils.pagination import SmallPagination
 from ...serializers import ArtistSerializer
@@ -11,6 +11,9 @@ __all__ = (
 
 
 class ArtistListCreateView(generics.ListCreateAPIView):
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+    )
     queryset = Artist.objects.all()
     serializer_class = ArtistSerializer
 
@@ -18,5 +21,6 @@ class ArtistListCreateView(generics.ListCreateAPIView):
 
 
 class ArtistRetrieveUpdateDestroyVIew(generics.RetrieveUpdateDestroyAPIView):
+
     queryset = Artist.objects.all()
     serializer_class = ArtistSerializer
